@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seoul_ro/itinerary.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const DefaultTabController(
+      home: DefaultTabController(
         length: 2,
         child: Scaffold(
           bottomNavigationBar: TabBar(tabs: [
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
             Tab(icon: Icon(Icons.map_outlined)),
           ]),
           body: TabBarView(children: [
-            Icon(Icons.directions),
+            Itinerary(),
             Icon(Icons.map_outlined),
           ]),
         ),
