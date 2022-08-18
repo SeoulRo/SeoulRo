@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seoul_ro/route_map.dart';
+import 'package:seoul_ro/itinerary.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             Tab(icon: Icon(Icons.map_outlined)),
           ]),
           body: TabBarView(children: [
-            RouteMap(),
+            Itinerary(),
             Icon(Icons.map_outlined),
           ]),
         ),

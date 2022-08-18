@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class RouteMap extends StatefulWidget {
+class Itinerary extends StatefulWidget {
   @override
-  State<RouteMap> createState() => MapSampleState();
+  State<Itinerary> createState() => MapSampleState();
 }
 
-class MapSampleState extends State<RouteMap> {
+class MapSampleState extends State<Itinerary> {
   Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _gyeongBokGung = CameraPosition(
