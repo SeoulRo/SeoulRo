@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
           bottomNavigationBar: Container(
             color: Theme.of(context).primaryColor,
             child: const TabBar(tabs: [
-              Tab(icon: Icon(Icons.directions)),
-              Tab(icon: Icon(Icons.map_outlined)),
+              Tab(icon: Icon(Icons.directions), text: "여행중"),
+              Tab(icon: Icon(Icons.map_outlined), text: "일정"),
             ]),
           ),
           body: TabBarView(
