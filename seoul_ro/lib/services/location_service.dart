@@ -12,7 +12,7 @@ class LocationService {
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
     var placeId = json['candidates'][0]['place_id'] as String;
-    print(placeId);
+
     return placeId;
   }
 
@@ -24,7 +24,6 @@ class LocationService {
     var json = convert.jsonDecode(response.body);
     var results = json['result'] as Map<String, dynamic>;
 
-    print(results);
     return results;
   }
 

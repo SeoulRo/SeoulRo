@@ -61,7 +61,6 @@ class ItinerarySampleState extends State<Itinerary> {
                                 textCapitalization: TextCapitalization.words,
                                 decoration:
                                     InputDecoration(hintText: 'Search'),
-                                onChanged: (value) {print(value);},
                               ),
                             ),
                             IconButton(
