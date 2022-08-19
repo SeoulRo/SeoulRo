@@ -13,16 +13,16 @@ class ItinerarySampleState extends State<Itinerary> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController _searchController = TextEditingController();
 
-  static final CameraPosition _gyeongBokGung = CameraPosition(
+  static const CameraPosition _gyeongBokGung = CameraPosition(
     target: LatLng(37.57986, 126.97711),
     zoom: 14,
   );
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: Column(children: [
-        Container(
+        SizedBox(
           height: 400,
           child: GoogleMap(
             mapType: MapType.terrain,
@@ -32,7 +32,7 @@ class ItinerarySampleState extends State<Itinerary> {
             },
           ),
         ),
-        Divider(),
+        const Divider(),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -40,13 +40,13 @@ class ItinerarySampleState extends State<Itinerary> {
                 Container(
                     color: Colors.orangeAccent,
                     height: 350,
-                    width: 300,
-                    child: Text("일정")),
+                    width: 350,
+                    child: const Text("일정")),
                 Container(
                     color: Colors.blueGrey,
                     height: 350,
                     width: 80,
-                    child: Text("일시")),
+                    child: const Text("일시")),
                 Container(
                     color: Colors.green,
                     height: 350,
@@ -59,13 +59,13 @@ class ItinerarySampleState extends State<Itinerary> {
                               child: TextFormField(
                                 controller: _searchController,
                                 textCapitalization: TextCapitalization.words,
-                                decoration:
-                                    InputDecoration(hintText: 'Search'),
+                                decoration: InputDecoration(hintText: 'Search'),
                               ),
                             ),
                             IconButton(
                               onPressed: () async {
-                                var place = await LocationService().getPlace(_searchController.text);
+                                var place = await LocationService()
+                                    .getPlace(_searchController.text);
                                 _goToPlace(place);
                               },
                               icon: Icon(Icons.search),
