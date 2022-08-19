@@ -33,50 +33,52 @@ class ItinerarySampleState extends State<Itinerary> {
           ),
         ),
         const Divider(),
-        SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Container(
-                    color: Colors.orangeAccent,
-                    height: 350,
-                    width: 350,
-                    child: const Text("일정")),
-                Container(
-                    color: Colors.blueGrey,
-                    height: 350,
-                    width: 80,
-                    child: const Text("일시")),
-                Container(
-                    color: Colors.green,
-                    height: 350,
-                    width: 300,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _searchController,
-                                textCapitalization: TextCapitalization.words,
-                                decoration:
-                                    const InputDecoration(hintText: 'Search'),
+        Expanded(
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Container(
+                      color: Colors.orangeAccent,
+                      height: 350,
+                      width: 350,
+                      child: const Text("일정")),
+                  Container(
+                      color: Colors.blueGrey,
+                      height: 350,
+                      width: 80,
+                      child: const Text("일시")),
+                  Container(
+                      color: Colors.green,
+                      height: 350,
+                      width: 300,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _searchController,
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration:
+                                      const InputDecoration(hintText: 'Search'),
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                var place = await LocationService()
-                                    .getPlace(_searchController.text);
-                                _goToPlace(place);
-                              },
-                              icon: const Icon(Icons.search),
-                            )
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
-            )),
+                              IconButton(
+                                onPressed: () async {
+                                  var place = await LocationService()
+                                      .getPlace(_searchController.text);
+                                  _goToPlace(place);
+                                },
+                                icon: const Icon(Icons.search),
+                              )
+                            ],
+                          ),
+                        ],
+                      )),
+                ],
+              )),
+        ),
       ]),
     );
   }
