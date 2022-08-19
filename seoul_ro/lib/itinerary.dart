@@ -10,8 +10,8 @@ class Itinerary extends StatefulWidget {
 }
 
 class ItinerarySampleState extends State<Itinerary> {
-  Completer<GoogleMapController> _controller = Completer();
-  TextEditingController _searchController = TextEditingController();
+  final Completer<GoogleMapController> _controller = Completer();
+  final TextEditingController _searchController = TextEditingController();
 
   static const CameraPosition _gyeongBokGung = CameraPosition(
     target: LatLng(37.57986, 126.97711),
@@ -59,7 +59,8 @@ class ItinerarySampleState extends State<Itinerary> {
                               child: TextFormField(
                                 controller: _searchController,
                                 textCapitalization: TextCapitalization.words,
-                                decoration: InputDecoration(hintText: 'Search'),
+                                decoration:
+                                    const InputDecoration(hintText: 'Search'),
                               ),
                             ),
                             IconButton(
@@ -68,7 +69,7 @@ class ItinerarySampleState extends State<Itinerary> {
                                     .getPlace(_searchController.text);
                                 _goToPlace(place);
                               },
-                              icon: Icon(Icons.search),
+                              icon: const Icon(Icons.search),
                             )
                           ],
                         ),
