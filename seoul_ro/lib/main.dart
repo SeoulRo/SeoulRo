@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
           body: TabBarView(
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              Itinerary(),
               const Icon(Icons.map_outlined),
+              Itinerary(),
             ],
           ),
         ),
