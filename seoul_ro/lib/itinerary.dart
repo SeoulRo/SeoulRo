@@ -32,6 +32,28 @@ class MapSampleState extends State<Itinerary> {
             ),
           ),
           Divider(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Container(
+                    color: Colors.orangeAccent,
+                    height: 350,
+                    width: 350,
+                    child: Text("일정")),
+                Container(
+                    color: Colors.blueGrey,
+                    height: 350,
+                    width: 80,
+                    child: Text("일시")),
+                Container(
+                    color: Colors.green,
+                    height: 350,
+                    width: 350,
+                    child: Text("검색")),
+              ],
+            ),
+          )
         ],
       ),
     );
