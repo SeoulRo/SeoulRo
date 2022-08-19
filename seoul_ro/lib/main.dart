@@ -32,10 +32,13 @@ class MyApp extends StatelessWidget {
             Tab(icon: Icon(Icons.directions)),
             Tab(icon: Icon(Icons.map_outlined)),
           ]),
-          body: TabBarView(children: [
-            Itinerary(),
-            Icon(Icons.map_outlined),
-          ]),
+          body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              Itinerary(),
+              Icon(Icons.map_outlined),
+            ],
+          ),
         ),
       ),
     );

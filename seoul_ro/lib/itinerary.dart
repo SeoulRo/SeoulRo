@@ -19,12 +19,20 @@ class MapSampleState extends State<Itinerary> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.terrain,
-        initialCameraPosition: _gyeongBokGung,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+      body: Column(
+        children: [
+          Container(
+            height: 400,
+            child: GoogleMap(
+              mapType: MapType.terrain,
+              initialCameraPosition: _gyeongBokGung,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+            ),
+          ),
+          Divider(),
+        ],
       ),
     );
   }
