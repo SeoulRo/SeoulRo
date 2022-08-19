@@ -10,19 +10,19 @@ class Itinerary extends StatefulWidget {
 }
 
 class ItinerarySampleState extends State<Itinerary> {
-  Completer<GoogleMapController> _controller = Completer();
-  TextEditingController _searchController = TextEditingController();
+  final Completer<GoogleMapController> _controller = Completer();
+  final TextEditingController _searchController = TextEditingController();
 
-  static final CameraPosition _gyeongBokGung = CameraPosition(
+  static const CameraPosition _gyeongBokGung = CameraPosition(
     target: LatLng(37.57986, 126.97711),
     zoom: 14,
   );
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: Column(children: [
-        Container(
+        SizedBox(
           height: 400,
           child: GoogleMap(
             mapType: MapType.terrain,
@@ -32,50 +32,53 @@ class ItinerarySampleState extends State<Itinerary> {
             },
           ),
         ),
-        Divider(),
-        SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Container(
-                    color: Colors.orangeAccent,
-                    height: 350,
-                    width: 300,
-                    child: Text("일정")),
-                Container(
-                    color: Colors.blueGrey,
-                    height: 350,
-                    width: 80,
-                    child: Text("일시")),
-                Container(
-                    color: Colors.green,
-                    height: 350,
-                    width: 300,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _searchController,
-                                textCapitalization: TextCapitalization.words,
-                                decoration:
-                                    InputDecoration(hintText: 'Search'),
+        const Divider(),
+        Expanded(
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Container(
+                      color: Colors.orangeAccent,
+                      height: 350,
+                      width: 350,
+                      child: const Text("일정")),
+                  Container(
+                      color: Colors.blueGrey,
+                      height: 350,
+                      width: 80,
+                      child: const Text("일시")),
+                  Container(
+                      color: Colors.green,
+                      height: 350,
+                      width: 300,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _searchController,
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration:
+                                      const InputDecoration(hintText: 'Search'),
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                var place = await LocationService().getPlace(_searchController.text);
-                                _goToPlace(place);
-                              },
-                              icon: Icon(Icons.search),
-                            )
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
-            )),
+                              IconButton(
+                                onPressed: () async {
+                                  var place = await LocationService()
+                                      .getPlace(_searchController.text);
+                                  _goToPlace(place);
+                                },
+                                icon: const Icon(Icons.search),
+                              )
+                            ],
+                          ),
+                        ],
+                      )),
+                ],
+              )),
+        ),
       ]),
     );
   }
