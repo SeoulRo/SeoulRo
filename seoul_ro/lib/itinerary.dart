@@ -46,11 +46,6 @@ class ItinerarySampleState extends State<Itinerary> {
                     width: 350,
                     child: const Text("일정")),
                 Container(
-                    color: Colors.blueGrey,
-                    height: 350,
-                    width: 80,
-                    child: const Text("일시")),
-                Container(
                   color: Colors.green,
                   height: 350,
                   width: 300,
