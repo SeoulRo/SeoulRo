@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seoul_ro/bloc/location_search_state.dart';
-import 'package:seoul_ro/bloc/table_bloc.dart';
-import 'package:seoul_ro/bloc/table_state.dart';
+import 'package:seoul_ro/bloc/timetable_bloc.dart';
+import 'package:seoul_ro/bloc/timetable_state.dart';
 import 'package:seoul_ro/models/spot.dart';
 
 import 'bloc/location_search_bloc.dart';
 import 'bloc/location_search_event.dart';
-import 'bloc/table_event.dart';
+import 'bloc/timetable_event.dart';
 
 class Itinerary extends StatefulWidget {
   @override
@@ -53,9 +53,9 @@ class ItinerarySampleState extends State<Itinerary> {
                     child: Column(
                       children: [
                         const Text("일정"),
-                        BlocBuilder<TableBloc, TableState>(
+                        BlocBuilder<TimetableBloc, TimetableState>(
                             builder: ((context, state) {
-                          if (state is FullTableState) {
+                          if (state is FullTimetableState) {
                             return Column(
                                 children: state.spots
                                     .map((spot) => Text(spot.name))
@@ -112,7 +112,7 @@ class ItinerarySampleState extends State<Itinerary> {
                                         longitude: location.longitude,
                                       );
                                       context
-                                          .read<TableBloc>()
+                                          .read<TimetableBloc>()
                                           .add(SpotAdded(spot: spot));
                                     },
                                   )
