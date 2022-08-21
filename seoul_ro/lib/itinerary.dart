@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:seoul_ro/bloc/spot.dart';
 
 import 'bloc/location_bloc.dart';
 
@@ -44,7 +45,17 @@ class ItinerarySampleState extends State<Itinerary> {
                     color: Colors.orangeAccent,
                     height: 350,
                     width: 350,
-                    child: const Text("일정")),
+                    child: Column(
+                      children: [
+                        Text("일정"),
+                        BlocBuilder<SpotBloc, List<Spot>>(
+                            builder: ((context, spots) {
+                          return Column(children: <Widget>[
+                            for (var spot in spots) Text(spot.toString())
+                          ]);
+                        }))
+                      ],
+                    )),
                 Container(
                   color: Colors.green,
                   height: 350,
@@ -77,8 +88,14 @@ class ItinerarySampleState extends State<Itinerary> {
                             if (location != null) {
                               return Row(children: [
                                 Text(location.title),
-                                Text(location.longitude.toString()),
-                                Text(location.latitude.toString()),
+                                IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    context.read<SpotBloc>().add(
+                                        AddToTableAction(
+                                            locationData: location));
+                                  },
+                                )
                               ]);
                             } else {
                               return const SizedBox();
