@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:seoul_ro/services/location_service.dart';
+import 'package:seoul_ro/bloc/location_search_state.dart';
+
+import 'bloc/location_search_bloc.dart';
+import 'bloc/location_search_event.dart';
 
 class Itinerary extends StatefulWidget {
   @override
@@ -35,49 +39,62 @@ class ItinerarySampleState extends State<Itinerary> {
         const Divider(),
         Expanded(
           child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Container(
-                      color: Colors.orangeAccent,
-                      height: 350,
-                      width: 350,
-                      child: const Text("일정")),
-                  Container(
-                      color: Colors.blueGrey,
-                      height: 350,
-                      width: 80,
-                      child: const Text("일시")),
-                  Container(
-                      color: Colors.green,
-                      height: 350,
-                      width: 300,
-                      child: Column(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Container(
+                    color: Colors.orangeAccent,
+                    height: 350,
+                    width: 350,
+                    child: const Text("일정")),
+                Container(
+                    color: Colors.blueGrey,
+                    height: 350,
+                    width: 80,
+                    child: const Text("일시")),
+                Container(
+                  color: Colors.green,
+                  height: 350,
+                  width: 300,
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: _searchController,
-                                  textCapitalization: TextCapitalization.words,
-                                  decoration:
-                                      const InputDecoration(hintText: 'Search'),
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () async {
-                                  var place = await LocationService()
-                                      .getPlace(_searchController.text);
-                                  _goToPlace(place);
-                                },
-                                icon: const Icon(Icons.search),
-                              )
-                            ],
+                          Expanded(
+                            child: TextFormField(
+                              controller: _searchController,
+                              textCapitalization: TextCapitalization.words,
+                              decoration:
+                                  const InputDecoration(hintText: 'Search'),
+                            ),
                           ),
+                          IconButton(
+                            onPressed: () async {
+                              context.read<LocationSearchBloc>().add(
+                                  LocationSearchEvent(
+                                      searchString: _searchController.text));
+                            },
+                            icon: const Icon(Icons.search),
+                          )
                         ],
-                      )),
-                ],
-              )),
+                      ),
+                      BlocBuilder<LocationSearchBloc, LocationSearchState>(
+                          buildWhen: (_, __) => true,
+                          builder: ((context, state) {
+                            if (state is SearchStateLoading) {
+                              return const CircularProgressIndicator();
+                            }
+                            if (state is SearchStateSuccess) {
+                              return Text(state.location.title);
+                            }
+                            return const SizedBox();
+                          }))
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ]),
     );
