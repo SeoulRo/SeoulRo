@@ -71,14 +71,14 @@ class ItinerarySampleState extends State<Itinerary> {
                           )
                         ],
                       ),
-                      BlocBuilder<LocationBloc, LocationFetchResult?>(
+                      BlocBuilder<LocationBloc, LocationData?>(
                           buildWhen: (_, __) => true,
-                          builder: ((context, fetchResult) {
-                            if (fetchResult != null) {
+                          builder: ((context, location) {
+                            if (location != null) {
                               return Row(children: [
-                                Text(fetchResult.title),
-                                Text(fetchResult.longitude.toString()),
-                                Text(fetchResult.latitude.toString()),
+                                Text(location.title),
+                                Text(location.longitude.toString()),
+                                Text(location.latitude.toString()),
                               ]);
                             } else {
                               return const SizedBox();
