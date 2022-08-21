@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:seoul_ro/bloc/table_bloc.dart';
+import 'package:seoul_ro/bloc/timetable_bloc.dart';
 import 'package:seoul_ro/itinerary.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<LocationSearchBloc>(
             create: (_) => LocationSearchBloc(),
           ),
-          BlocProvider<TableBloc>(create: (_) => TableBloc())
+          BlocProvider<TimetableBloc>(create: (_) => TimetableBloc())
         ],
         child: DefaultTabController(
           length: 2,
