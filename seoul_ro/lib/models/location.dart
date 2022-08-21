@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 @immutable
 class Location {
-  final String title;
+  final String name;
   final double latitude;
   final double longitude;
 
   const Location(
-      {required this.title, required this.latitude, required this.longitude});
+      {required this.name, required this.latitude, required this.longitude});
 }

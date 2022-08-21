@@ -102,12 +102,12 @@ class ItinerarySampleState extends State<Itinerary> {
                               final location = state.location;
                               return Row(
                                 children: [
-                                  Text(location.title),
+                                  Text(location.name),
                                   IconButton(
                                     icon: const Icon(Icons.add),
                                     onPressed: () {
                                       final spot = Spot(
-                                        name: location.title,
+                                        name: location.name,
                                         latitude: location.latitude,
                                         longitude: location.longitude,
                                       );

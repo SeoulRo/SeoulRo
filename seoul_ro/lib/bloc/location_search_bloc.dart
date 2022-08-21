@@ -13,7 +13,7 @@ class LocationSearchBloc
 
       final place = await LocationService().getPlace(event.searchString);
       final result = Location(
-          title: place['name'],
+          name: place['name'],
           latitude: place['geometry']['location']['lat'],
           longitude: place['geometry']['location']['lng']);
 
