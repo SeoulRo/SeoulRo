@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:seoul_ro/models/location.dart';
 
 import '../services/location_service.dart';
 import 'location_search_event.dart';
@@ -20,14 +20,4 @@ class LocationSearchBloc
       emit(SearchStateSuccess(result));
     });
   }
-}
-
-@immutable
-class Location {
-  final String title;
-  final double latitude;
-  final double longitude;
-
-  const Location(
-      {required this.title, required this.latitude, required this.longitude});
 }

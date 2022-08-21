@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:seoul_ro/bloc/table_bloc.dart';
 import 'package:seoul_ro/itinerary.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
 
@@ -18,8 +19,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Seoul Ro',
       theme: appTheme,
-      home: BlocProvider(
-        create: (_) => LocationSearchBloc(),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<LocationSearchBloc>(
+            create: (_) => LocationSearchBloc(),
+          ),
+          BlocProvider<TableBloc>(create: (_) => TableBloc())
+        ],
         child: DefaultTabController(
           length: 2,
           child: Scaffold(
