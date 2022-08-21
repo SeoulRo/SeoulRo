@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seoul_ro/itinerary.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
 
-import 'bloc/location_bloc.dart';
+import 'bloc/location_search_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Seoul Ro',
       theme: appTheme,
       home: BlocProvider(
-        create: (_) => LocationBloc(),
+        create: (_) => LocationSearchBloc(),
         child: DefaultTabController(
           length: 2,
           child: Scaffold(

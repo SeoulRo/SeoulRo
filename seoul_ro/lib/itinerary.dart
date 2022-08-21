@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:seoul_ro/bloc/location_search_state.dart';
 
-import 'bloc/location_bloc.dart';
+import 'bloc/location_search_bloc.dart';
+import 'bloc/location_search_event.dart';
 
 class Itinerary extends StatefulWidget {
   @override
@@ -68,26 +70,24 @@ class ItinerarySampleState extends State<Itinerary> {
                           ),
                           IconButton(
                             onPressed: () async {
-                              context.read<LocationBloc>().add(
-                                  LoadSearchLocationAction(
+                              context.read<LocationSearchBloc>().add(
+                                  LocationSearchEvent(
                                       searchString: _searchController.text));
                             },
                             icon: const Icon(Icons.search),
                           )
                         ],
                       ),
-                      BlocBuilder<LocationBloc, LocationFetchResult?>(
+                      BlocBuilder<LocationSearchBloc, LocationSearchState>(
                           buildWhen: (_, __) => true,
-                          builder: ((context, fetchResult) {
-                            if (fetchResult != null) {
-                              return Row(children: [
-                                Text(fetchResult.title),
-                                Text(fetchResult.longitude.toString()),
-                                Text(fetchResult.latitude.toString()),
-                              ]);
-                            } else {
-                              return const SizedBox();
+                          builder: ((context, state) {
+                            if (state is SearchStateLoading) {
+                              return const CircularProgressIndicator();
                             }
+                            if (state is SearchStateSuccess) {
+                              return Text(state.location.title);
+                            }
+                            return const SizedBox();
                           }))
                     ],
                   ),
