@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seoul_ro/bloc/location_search_state.dart';
+import 'package:seoul_ro/bloc/table_bloc.dart';
+import 'package:seoul_ro/bloc/table_state.dart';
+import 'package:seoul_ro/models/spot.dart';
 
 import 'bloc/location_search_bloc.dart';
 import 'bloc/location_search_event.dart';
+import 'bloc/table_event.dart';
 
 class Itinerary extends StatefulWidget {
   @override
@@ -46,12 +50,22 @@ class ItinerarySampleState extends State<Itinerary> {
                     color: Colors.orangeAccent,
                     height: 350,
                     width: 350,
-                    child: const Text("일정")),
-                Container(
-                    color: Colors.blueGrey,
-                    height: 350,
-                    width: 80,
-                    child: const Text("일시")),
+                    child: Column(
+                      children: [
+                        const Text("일정"),
+                        BlocBuilder<TableBloc, TableState>(
+                            builder: ((context, state) {
+                          if (state is FullTableState) {
+                            return Column(
+                                children: state.spots
+                                    .map((spot) => Text(spot.name))
+                                    .toList());
+                          } else {
+                            return const SizedBox();
+                          }
+                        }))
+                      ],
+                    )),
                 Container(
                   color: Colors.green,
                   height: 350,
@@ -85,7 +99,25 @@ class ItinerarySampleState extends State<Itinerary> {
                               return const CircularProgressIndicator();
                             }
                             if (state is SearchStateSuccess) {
-                              return Text(state.location.title);
+                              final location = state.location;
+                              return Row(
+                                children: [
+                                  Text(location.name),
+                                  IconButton(
+                                    icon: const Icon(Icons.add),
+                                    onPressed: () {
+                                      final spot = Spot(
+                                        name: location.name,
+                                        latitude: location.latitude,
+                                        longitude: location.longitude,
+                                      );
+                                      context
+                                          .read<TableBloc>()
+                                          .add(SpotAdded(spot: spot));
+                                    },
+                                  )
+                                ],
+                              );
                             }
                             return const SizedBox();
                           }))

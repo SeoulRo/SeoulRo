@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import 'location_search_bloc.dart';
+import 'package:seoul_ro/models/location.dart';
 
 abstract class LocationSearchState extends Equatable {
   const LocationSearchState();
