@@ -31,7 +31,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
         ),
       ),
       body: Column(children: [

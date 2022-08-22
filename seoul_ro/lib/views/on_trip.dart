@@ -8,15 +8,15 @@ class OnTrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (itineries.length == 0) {
+    if (itineries.isEmpty) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               width: double.infinity,
               height: 50,
-              child: const Text(
+              child: Text(
                 "아무것도 없어요",
                 textAlign: TextAlign.center,
               ),
