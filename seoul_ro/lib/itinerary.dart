@@ -32,13 +32,25 @@ class ItinerarySampleState extends State<Itinerary> {
       body: Column(children: [
         SizedBox(
           height: 400,
-          child: GoogleMap(
-            mapType: MapType.terrain,
-            initialCameraPosition: _gyeongBokGung,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-          ),
+          child: BlocBuilder<TimetableBloc, TimetableState>(
+              builder: ((context, state) {
+            var emptySet = <Marker>{};
+            return GoogleMap(
+                mapType: MapType.terrain,
+                initialCameraPosition: _gyeongBokGung,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+                markers: (state is FullTimetableState)
+                    ? state.spots.asMap().entries.map((entry) {
+                        int idx = entry.key;
+                        Spot spot = entry.value;
+                        return Marker(
+                            markerId: MarkerId(idx.toString()),
+                            position: LatLng(spot.latitude, spot.longitude));
+                      }).toSet()
+                    : emptySet);
+          })),
         ),
         const Divider(),
         Expanded(
