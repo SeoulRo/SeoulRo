@@ -34,22 +34,35 @@ class ItinerarySampleState extends State<Itinerary> {
           height: 400,
           child: BlocBuilder<TimetableBloc, TimetableState>(
               builder: ((context, state) {
-            var emptySet = <Marker>{};
             return GoogleMap(
                 mapType: MapType.terrain,
                 initialCameraPosition: _gyeongBokGung,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
+                polylines: (state is FullTimetableState)
+                    ? {
+                        Polyline(
+                            polylineId: const PolylineId('Route'),
+                            color: Colors.red,
+                            width: 5,
+                            points: state.spots
+                                .map((spot) =>
+                                    LatLng(spot.latitude, spot.longitude))
+                                .toList())
+                      }
+                    : <Polyline>{},
                 markers: (state is FullTimetableState)
                     ? state.spots.asMap().entries.map((entry) {
                         int idx = entry.key;
                         Spot spot = entry.value;
                         return Marker(
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                                BitmapDescriptor.hueGreen),
                             markerId: MarkerId(idx.toString()),
                             position: LatLng(spot.latitude, spot.longitude));
                       }).toSet()
-                    : emptySet);
+                    : <Marker>{});
           })),
         ),
         const Divider(),
