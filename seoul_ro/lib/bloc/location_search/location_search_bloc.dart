@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:seoul_ro/models/location.dart';
 
-import '../services/location_service.dart';
+import '../../services/location_service.dart';
 import 'location_search_event.dart';
 import 'location_search_state.dart';
 
