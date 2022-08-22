@@ -27,6 +27,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("여행 일정 고르기"),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       body: Column(children: [
         SizedBox(
@@ -51,14 +57,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         Expanded(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: SizedBox(
                   width: double.infinity,
-                  height: 100,
+                  height: 50,
                   child: Row(
-                    children: [
-                      const Text("날짜:"),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text("날짜:"),
                     ],
                   ),
                 ),
@@ -66,12 +75,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Expanded(
                 child: SizedBox(
                   width: double.infinity,
-                  height: 100,
+                  height: 50,
                   child: Row(
                     children: [
                       const Text("여행제목:"),
-                      TextField(
-                        controller: _tripNameController,
+                      SizedBox(
+                        width: 100,
+                        height: 25,
+                        child: TextField(
+                          controller: _tripNameController,
+                        ),
                       )
                     ],
                   ),
@@ -80,7 +93,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               const Expanded(
                 child: SizedBox(
                   width: double.infinity,
-                  height: 100,
+                  height: 50,
                   child: TextButton(onPressed: null, child: Text("만들기")),
                 ),
               ),
