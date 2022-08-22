@@ -8,7 +8,7 @@ class OnTrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (itineries.length == 0) {
-      return Column(children: [
+      return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         const Text("아무것도 없어요"),
         TextButton(
             style: TextButton.styleFrom(
