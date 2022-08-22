@@ -110,6 +110,8 @@ class ItinerarySampleState extends State<Itinerary> {
                                         name: location.name,
                                         latitude: location.latitude,
                                         longitude: location.longitude,
+                                        startTime: TimeOfDay.now(),
+                                        endTime: TimeOfDay.now(),
                                       );
                                       context
                                           .read<TimetableBloc>()
