@@ -32,13 +32,38 @@ class ItinerarySampleState extends State<Itinerary> {
       body: Column(children: [
         SizedBox(
           height: 400,
-          child: GoogleMap(
-            mapType: MapType.terrain,
-            initialCameraPosition: _gyeongBokGung,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-          ),
+          child: BlocBuilder<TimetableBloc, TimetableState>(
+              builder: ((context, state) {
+            return GoogleMap(
+                mapType: MapType.terrain,
+                initialCameraPosition: _gyeongBokGung,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+                polylines: (state is FullTimetableState)
+                    ? {
+                        Polyline(
+                            polylineId: const PolylineId('Route'),
+                            color: Colors.red,
+                            width: 5,
+                            points: state.spots
+                                .map((spot) =>
+                                    LatLng(spot.latitude, spot.longitude))
+                                .toList())
+                      }
+                    : <Polyline>{},
+                markers: (state is FullTimetableState)
+                    ? state.spots.asMap().entries.map((entry) {
+                        int idx = entry.key;
+                        Spot spot = entry.value;
+                        return Marker(
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                                BitmapDescriptor.hueGreen),
+                            markerId: MarkerId(idx.toString()),
+                            position: LatLng(spot.latitude, spot.longitude));
+                      }).toSet()
+                    : <Marker>{});
+          })),
         ),
         const Divider(),
         Expanded(
@@ -110,6 +135,8 @@ class ItinerarySampleState extends State<Itinerary> {
                                         name: location.name,
                                         latitude: location.latitude,
                                         longitude: location.longitude,
+                                        startTime: TimeOfDay.now(),
+                                        endTime: TimeOfDay.now(),
                                       );
                                       context
                                           .read<TimetableBloc>()
