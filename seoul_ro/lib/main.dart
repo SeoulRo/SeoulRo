@@ -6,9 +6,10 @@ import 'package:seoul_ro/on_planning.dart';
 import 'package:seoul_ro/views/on_trip.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
 import 'bloc/location_search/location_search_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatefulWidget {

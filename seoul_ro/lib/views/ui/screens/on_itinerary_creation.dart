@@ -43,6 +43,7 @@ class _OnItineraryCreationState extends State<OnItineraryCreation> {
             width: double.infinity,
             height: 400,
             child: TableCalendar(
+              locale: 'ko_KR',
               calendarFormat: _calendarFormat,
               rangeSelectionMode: _rangeSelectionMode,
               rangeStartDay: _firstDay,
