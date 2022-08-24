@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seoul_ro/bloc/itineraries/itineraries_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
-import 'package:seoul_ro/on_planning.dart';
+import 'package:seoul_ro/views/on_planning.dart';
 import 'package:seoul_ro/views/on_trip.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
 import 'bloc/location_search/location_search_bloc.dart';
