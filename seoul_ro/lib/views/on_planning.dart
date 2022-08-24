@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seoul_ro/bloc/location_search/location_search_bloc.dart';
@@ -26,6 +29,35 @@ class ItinerarySampleState extends State<OnPlanning> {
     target: LatLng(37.57986, 126.97711),
     zoom: 14,
   );
+  List<BitmapDescriptor> greenIcons = List.empty(growable: true);
+  List<BitmapDescriptor> yellowIcons = List.empty(growable: true);
+  List<BitmapDescriptor> redIcons = List.empty(growable: true);
+
+  static Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    Codec codec = await instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
+
+  @override
+  void initState() {
+    for (var number in [1, 2, 3, 4, 5, 6]) {
+      getBytesFromAsset('assets/icons/G$number.png', 100).then((onValue) {
+        greenIcons.add(BitmapDescriptor.fromBytes(onValue));
+      });
+      getBytesFromAsset('assets/icons/Y$number.png', 100).then((onValue) {
+        yellowIcons.add(BitmapDescriptor.fromBytes(onValue));
+      });
+      getBytesFromAsset('assets/icons/R$number.png', 100).then((onValue) {
+        redIcons.add(BitmapDescriptor.fromBytes(onValue));
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +68,7 @@ class ItinerarySampleState extends State<OnPlanning> {
           child: BlocBuilder<TimetableBloc, TimetableState>(
               builder: ((context, state) {
             return GoogleMap(
-                mapType: MapType.terrain,
+                mapType: MapType.normal,
                 initialCameraPosition: _gyeongBokGung,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
@@ -58,8 +90,7 @@ class ItinerarySampleState extends State<OnPlanning> {
                         int idx = entry.key;
                         Spot spot = entry.value;
                         return Marker(
-                            icon: BitmapDescriptor.defaultMarkerWithHue(
-                                BitmapDescriptor.hueGreen),
+                            icon: greenIcons[0],
                             markerId: MarkerId(idx.toString()),
                             position: LatLng(spot.latitude, spot.longitude));
                       }).toSet()
