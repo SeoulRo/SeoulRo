@@ -137,6 +137,7 @@ class ItinerarySampleState extends State<OnPlanning> {
                                         name: location.name,
                                         latitude: location.latitude,
                                         longitude: location.longitude,
+                                        popularTimes: location.popularTimes,
                                         startTime: TimeOfDay.now(),
                                         endTime: TimeOfDay.now(),
                                       );
