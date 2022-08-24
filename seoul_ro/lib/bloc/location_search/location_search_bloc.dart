@@ -118,7 +118,7 @@ class LocationSearchBloc
     SensorLocation(4051, 37.550701, 127.143013, SensorMethod.wifi),
   ];
   final String seoulDataKey = '77547963466b796f34337957694b74';
-  static const int SENSOR_RANGE = 1;
+  static const int SENSOR_RANGE = 3;
 
   LocationSearchBloc() : super(SearchStateEmpty()) {
     on<LocationSearchEvent>((event, emit) async {
@@ -139,11 +139,11 @@ class LocationSearchBloc
       List<PopularTimes> popularTimes;
       if (calcDistance(placeLat, placeLong, closestSensor.latitude,
               closestSensor.longitude) < SENSOR_RANGE) {
-        popularTimes = List.empty();
-      } else {
         Iterable jsonList = sensorHistory[closestSensor.id.toString()];
         popularTimes = List<PopularTimes>.from(
             jsonList.map((model) => PopularTimes.fromJson(model)));
+      } else {
+        popularTimes = List.empty();
       }
 
       final result = Location(

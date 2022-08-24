@@ -89,8 +89,23 @@ class ItinerarySampleState extends State<OnPlanning> {
                     ? state.spots.asMap().entries.map((entry) {
                         int idx = entry.key;
                         Spot spot = entry.value;
+                        BitmapDescriptor icon;
+                        switch(spot.calculateTraffic(5)) {
+                          case Traffic.green:
+                            icon = greenIcons[idx];
+                            break;
+                          case Traffic.yellow:
+                            icon = yellowIcons[idx];
+                            break;
+                          case Traffic.red:
+                            icon = redIcons[idx];
+                            break;
+                          case Traffic.unknown:
+                            icon = BitmapDescriptor.defaultMarker;
+                            break;
+                        }
                         return Marker(
-                            icon: greenIcons[0],
+                            icon: icon,
                             markerId: MarkerId(idx.toString()),
                             position: LatLng(spot.latitude, spot.longitude));
                       }).toSet()
