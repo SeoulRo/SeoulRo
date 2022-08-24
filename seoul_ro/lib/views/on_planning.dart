@@ -32,6 +32,7 @@ class ItinerarySampleState extends State<OnPlanning> {
   List<BitmapDescriptor> greenIcons = List.empty(growable: true);
   List<BitmapDescriptor> yellowIcons = List.empty(growable: true);
   List<BitmapDescriptor> redIcons = List.empty(growable: true);
+  List<BitmapDescriptor> greyIcons = List.empty(growable: true);
 
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -54,6 +55,9 @@ class ItinerarySampleState extends State<OnPlanning> {
       });
       getBytesFromAsset('assets/icons/R$number.png', 100).then((onValue) {
         redIcons.add(BitmapDescriptor.fromBytes(onValue));
+      });
+      getBytesFromAsset('assets/icons/B$number.png', 100).then((onValue) {
+        greyIcons.add(BitmapDescriptor.fromBytes(onValue));
       });
     }
     super.initState();
@@ -90,19 +94,24 @@ class ItinerarySampleState extends State<OnPlanning> {
                         int idx = entry.key;
                         Spot spot = entry.value;
                         BitmapDescriptor icon;
-                        switch(spot.calculateTraffic(5)) {
-                          case Traffic.green:
-                            icon = greenIcons[idx];
-                            break;
-                          case Traffic.yellow:
-                            icon = yellowIcons[idx];
-                            break;
-                          case Traffic.red:
-                            icon = redIcons[idx];
-                            break;
-                          case Traffic.unknown:
-                            icon = BitmapDescriptor.defaultMarker;
-                            break;
+                        try {
+                          switch (spot.calculateTraffic(5)) {
+                            case Traffic.green:
+                              icon = greenIcons[idx];
+                              break;
+                            case Traffic.yellow:
+                              icon = yellowIcons[idx];
+                              break;
+                            case Traffic.red:
+                              icon = redIcons[idx];
+                              break;
+                            case Traffic.unknown:
+                              icon = greyIcons[idx];
+                              break;
+                          }
+                        } catch (exception) {
+                          icon = BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueRed);
                         }
                         return Marker(
                             icon: icon,
