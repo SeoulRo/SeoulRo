@@ -5,6 +5,22 @@ abstract class TimetableEvent extends Equatable {
   const TimetableEvent();
 }
 
+class TitleAdded extends TimetableEvent {
+  final String title;
+  const TitleAdded({required this.title});
+
+  @override
+  List<Object> get props => [title];
+}
+
+class DateAdded extends TimetableEvent {
+  final DateTime date;
+  const DateAdded({required this.date});
+
+  @override
+  List<Object> get props => [date];
+}
+
 class SpotAdded extends TimetableEvent {
   final Spot spot;
 

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:seoul_ro/bloc/itineraries/itineraries_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/views/on_planning.dart';
-import 'package:seoul_ro/views/on_trip.dart';
+import 'package:seoul_ro/views/on_dailytrip.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
 import 'bloc/location_search/location_search_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
-  initializeDateFormatting().then((_) => runApp(MyApp()));
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -32,7 +31,6 @@ class _MyAppState extends State<MyApp> {
             create: (_) => LocationSearchBloc(),
           ),
           BlocProvider<TimetableBloc>(create: (_) => TimetableBloc()),
-          BlocProvider<ItinerariesBloc>(create: (_) => ItinerariesBloc()),
         ],
         child: DefaultTabController(
           length: 2,
@@ -40,9 +38,9 @@ class _MyAppState extends State<MyApp> {
             body: SafeArea(
               child: IndexedStack(
                 index: _pageIndex,
-                children: [
-                  const OnTrip(),
-                  const OnPlanning(),
+                children: const [
+                  OnDailyTrip(),
+                  OnPlanning(),
                 ],
               ),
             ),

@@ -18,10 +18,10 @@ class OnPlanning extends StatefulWidget {
   const OnPlanning({Key? key}) : super(key: key);
 
   @override
-  State<OnPlanning> createState() => ItinerarySampleState();
+  State<OnPlanning> createState() => OnPlanningState();
 }
 
-class ItinerarySampleState extends State<OnPlanning> {
+class OnPlanningState extends State<OnPlanning> {
   final Completer<GoogleMapController> _controller = Completer();
   final TextEditingController _searchController = TextEditingController();
 
@@ -65,19 +65,22 @@ class ItinerarySampleState extends State<OnPlanning> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(children: [
-        SizedBox(
-          height: 400,
-          child: BlocBuilder<TimetableBloc, TimetableState>(
-              builder: ((context, state) {
-            return GoogleMap(
+    return BlocBuilder<TimetableBloc, TimetableState>(
+        builder: (context, state) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(createOnPlanningTitle(state.title, state.date)),
+        ),
+        body: Column(children: [
+          SizedBox(
+            height: 400,
+            child: GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: _gyeongBokGung,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
-                polylines: (state is FullTimetableState)
+                polylines: (state.spots.isNotEmpty)
                     ? {
                         Polyline(
                             polylineId: const PolylineId('Route'),
@@ -89,7 +92,7 @@ class ItinerarySampleState extends State<OnPlanning> {
                                 .toList())
                       }
                     : <Polyline>{},
-                markers: (state is FullTimetableState)
+                markers: (state.spots.isNotEmpty)
                     ? state.spots.asMap().entries.map((entry) {
                         int idx = entry.key;
                         Spot spot = entry.value;
@@ -118,102 +121,101 @@ class ItinerarySampleState extends State<OnPlanning> {
                             markerId: MarkerId(idx.toString()),
                             position: LatLng(spot.latitude, spot.longitude));
                       }).toSet()
-                    : <Marker>{});
-          })),
-        ),
-        const Divider(),
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Container(
-                    color: Colors.orangeAccent,
-                    height: 350,
-                    width: 350,
-                    child: Column(
-                      children: [
-                        const Text("일정"),
-                        BlocBuilder<TimetableBloc, TimetableState>(
-                            builder: ((context, state) {
-                          if (state is FullTimetableState) {
-                            return Column(
-                                children: state.spots
-                                    .map((spot) => Text(spot.name))
-                                    .toList());
-                          } else {
-                            return const SizedBox();
-                          }
-                        }))
-                      ],
-                    )),
-                Container(
-                  color: Colors.green,
-                  height: 350,
-                  width: 300,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _searchController,
-                              textCapitalization: TextCapitalization.words,
-                              decoration:
-                                  const InputDecoration(hintText: 'Search'),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              context.read<LocationSearchBloc>().add(
-                                  LocationSearchEvent(
-                                      searchString: _searchController.text));
-                            },
-                            icon: const Icon(Icons.search),
-                          )
+                    : <Marker>{}),
+          ),
+          const Divider(),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Container(
+                      color: Colors.orangeAccent,
+                      height: 350,
+                      width: 350,
+                      child: Column(
+                        children: <Widget>[
+                          const Text("일정"),
+                          state.spots.isNotEmpty
+                              ? Column(
+                                  children: state.spots
+                                      .map((spot) => Text(spot.name))
+                                      .toList())
+                              : const SizedBox()
                         ],
-                      ),
-                      BlocBuilder<LocationSearchBloc, LocationSearchState>(
-                          buildWhen: (_, __) => true,
-                          builder: ((context, state) {
-                            if (state is SearchStateLoading) {
-                              return const CircularProgressIndicator();
-                            }
-                            if (state is SearchStateSuccess) {
-                              final location = state.location;
-                              return Row(
-                                children: [
-                                  Text(location.name),
-                                  IconButton(
-                                    icon: const Icon(Icons.add),
-                                    onPressed: () {
-                                      final spot = Spot(
-                                        name: location.name,
-                                        latitude: location.latitude,
-                                        longitude: location.longitude,
-                                        popularTimes: location.popularTimes,
-                                        startTime: TimeOfDay.now(),
-                                        endTime: TimeOfDay.now(),
-                                      );
-                                      context
-                                          .read<TimetableBloc>()
-                                          .add(SpotAdded(spot: spot));
-                                    },
-                                  )
-                                ],
-                              );
-                            }
-                            return const SizedBox();
-                          }))
-                    ],
-                  ),
-                ),
-              ],
+                      )),
+                  Container(
+                      color: Colors.green,
+                      height: 350,
+                      width: 300,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _searchController,
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration:
+                                      const InputDecoration(hintText: 'Search'),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  context.read<LocationSearchBloc>().add(
+                                      LocationSearchEvent(
+                                          searchString:
+                                              _searchController.text));
+                                },
+                                icon: const Icon(Icons.search),
+                              )
+                            ],
+                          ),
+                          BlocBuilder<LocationSearchBloc, LocationSearchState>(
+                              buildWhen: (_, __) => true,
+                              builder: ((context, state) {
+                                if (state is SearchStateLoading) {
+                                  return const CircularProgressIndicator();
+                                }
+                                if (state is SearchStateSuccess) {
+                                  final location = state.location;
+                                  return Row(
+                                    children: [
+                                      Text(location.name),
+                                      IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () {
+                                          final spot = Spot(
+                                            name: location.name,
+                                            latitude: location.latitude,
+                                            longitude: location.longitude,
+                                            popularTimes: location.popularTimes,
+                                            startTime: TimeOfDay.now(),
+                                            endTime: TimeOfDay.now(),
+                                          );
+                                          context
+                                              .read<TimetableBloc>()
+                                              .add(SpotAdded(spot: spot));
+                                        },
+                                      )
+                                    ],
+                                  );
+                                }
+                                return const SizedBox();
+                              }))
+                        ],
+                      )),
+                ],
+              ),
             ),
           ),
-        ),
-      ]),
-    );
+        ]),
+      );
+    });
+  }
+
+  String createOnPlanningTitle(String title, DateTime date) {
+    return '$title(${date.month}/${date.day})';
   }
 
   Future<void> _goToPlace(Map<String, dynamic> place) async {
