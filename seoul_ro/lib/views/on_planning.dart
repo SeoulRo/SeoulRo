@@ -77,7 +77,7 @@ class ItinerarySampleState extends State<OnPlanning> {
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
-                polylines: (state is FullTimetableState)
+                polylines: (state.spots.isNotEmpty)
                     ? {
                         Polyline(
                             polylineId: const PolylineId('Route'),
@@ -89,7 +89,7 @@ class ItinerarySampleState extends State<OnPlanning> {
                                 .toList())
                       }
                     : <Polyline>{},
-                markers: (state is FullTimetableState)
+                markers: (state.spots.isNotEmpty)
                     ? state.spots.asMap().entries.map((entry) {
                         int idx = entry.key;
                         Spot spot = entry.value;
@@ -136,7 +136,7 @@ class ItinerarySampleState extends State<OnPlanning> {
                         const Text("일정"),
                         BlocBuilder<TimetableBloc, TimetableState>(
                             builder: ((context, state) {
-                          if (state is FullTimetableState) {
+                          if (state.spots.isNotEmpty) {
                             return Column(
                                 children: state.spots
                                     .map((spot) => Text(spot.name))
