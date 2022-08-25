@@ -1,20 +1,36 @@
 import 'package:equatable/equatable.dart';
 import '../../models/spot.dart';
 
-abstract class TimetableState extends Equatable {
-  const TimetableState();
+const String initialTitle = '당신의 서울 여행';
+const List<Spot> initialSpots = <Spot>[];
 
-  @override
-  List<Object> get props => [];
-}
-
-class EmptyTimetableState extends TimetableState {}
-
-class FullTimetableState extends TimetableState {
+class TimetableState extends Equatable {
+  final String title;
+  final DateTime date;
   final List<Spot> spots;
 
-  const FullTimetableState(this.spots) : super();
+  const TimetableState(
+      {this.title = initialTitle,
+      required this.date,
+      this.spots = initialSpots})
+      : super();
+
+  TimetableState copyWith({
+    String? title,
+    DateTime? date,
+    List<Spot>? spots,
+  }) {
+    return TimetableState(
+        title: title ?? this.title,
+        date: date ?? this.date,
+        spots: spots ?? this.spots);
+  }
 
   @override
-  List<Object> get props => [spots];
+  String toString() {
+    return 'TimeTableState: { title: $title, date: $date, spots: ${spots.length}}';
+  }
+
+  @override
+  List<Object> get props => [title, date, spots];
 }
