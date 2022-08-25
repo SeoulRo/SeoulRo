@@ -1,15 +1,29 @@
+import 'dart:isolate';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:seoul_ro/bloc/itineraries/itineraries_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/views/on_planning.dart';
 import 'package:seoul_ro/views/on_trip.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
-import 'bloc/location_search/location_search_bloc.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+import 'bloc/location_search/location_search_bloc.dart';
+
+void printHello() async {
+  final DateTime now = DateTime.now();
+  final int isolateId = Isolate.current.hashCode;
+  print("[$now] Hello, world! isolate=$isolateId function='$printHello'");
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  const int helloAlarmID = 0;
+  await AndroidAlarmManager.initialize();
   initializeDateFormatting().then((_) => runApp(MyApp()));
+  await AndroidAlarmManager.periodic(const Duration(minutes: 1), helloAlarmID, printHello);
 }
 
 class MyApp extends StatefulWidget {
