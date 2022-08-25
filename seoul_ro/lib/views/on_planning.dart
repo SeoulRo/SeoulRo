@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,8 @@ class OnPlanning extends StatefulWidget {
 class OnPlanningState extends State<OnPlanning> {
   final Completer<GoogleMapController> _controller = Completer();
   final TextEditingController _searchController = TextEditingController();
+  TimeOfDay? _startTime;
+  TimeOfDay? _endTime;
 
   static const CameraPosition _gyeongBokGung = CameraPosition(
     target: LatLng(37.57986, 126.97711),
@@ -184,14 +187,52 @@ class OnPlanningState extends State<OnPlanning> {
                                       Text(location.name),
                                       IconButton(
                                         icon: const Icon(Icons.add),
-                                        onPressed: () {
+                                        onPressed: () async {
+                                          _startTime =
+                                              await _confirmStartTime();
+                                          if (_startTime == null) {
+                                            return;
+                                          }
+
+                                          _endTime = await _confirmEndTime();
+                                          if (_endTime == null) {
+                                            return;
+                                          }
+
+                                          if (_isLaterThan(
+                                              _startTime!, _endTime!)) {
+                                            await showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: const Text(
+                                                        "시작시간은 종료시간보다 늦을 수 없습니다."),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child:
+                                                              const Text("확인")),
+                                                    ],
+                                                    actionsAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                  );
+                                                },
+                                                barrierDismissible: true);
+                                            return;
+                                          }
+
                                           final spot = Spot(
                                             name: location.name,
                                             latitude: location.latitude,
                                             longitude: location.longitude,
                                             popularTimes: location.popularTimes,
-                                            startTime: TimeOfDay.now(),
-                                            endTime: TimeOfDay.now(),
+                                            startTime: _startTime!,
+                                            endTime: _endTime!,
                                           );
                                           context
                                               .read<TimetableBloc>()
@@ -216,6 +257,84 @@ class OnPlanningState extends State<OnPlanning> {
 
   String createOnPlanningTitle(String title, DateTime date) {
     return '$title(${date.month}/${date.day})';
+  }
+
+  Future<TimeOfDay?> _confirmStartTime() async {
+    TimeOfDay? startTime;
+    startTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(hour: 0, minute: 0),
+        helpText: '시작시간을 설정하기',
+        cancelText: '취소',
+        confirmText: '확인',
+        hourLabelText: '시',
+        minuteLabelText: '분');
+    if (startTime == null) {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("시작시간을 설정해주세요"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("확인")),
+              ],
+              actionsAlignment: MainAxisAlignment.center,
+            );
+          },
+          barrierDismissible: true);
+      return null;
+    }
+    return startTime;
+  }
+
+  Future<TimeOfDay?> _confirmEndTime() async {
+    TimeOfDay? endTime;
+    endTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(hour: 0, minute: 0),
+        helpText: '종료시간을 설정하기',
+        cancelText: '취소',
+        confirmText: '확인',
+        hourLabelText: '시',
+        minuteLabelText: '분');
+    if (endTime == null) {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("종료시간을 설정해주세요"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("확인")),
+              ],
+              actionsAlignment: MainAxisAlignment.center,
+            );
+          },
+          barrierDismissible: true);
+      return null;
+    }
+    return endTime;
+  }
+
+  bool _isLaterThan(TimeOfDay firstTime, TimeOfDay secondTime) {
+    final double firstTimeInDouble = _toDouble(firstTime);
+    final double secondTimeInDouble = _toDouble(secondTime);
+    if (firstTimeInDouble >= secondTimeInDouble) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  double _toDouble(TimeOfDay time) {
+    return time.hour + time.minute / 60.0;
   }
 
   Future<void> _goToPlace(Map<String, dynamic> place) async {
