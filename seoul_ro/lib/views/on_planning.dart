@@ -182,6 +182,7 @@ class OnPlanningState extends State<OnPlanning> {
                                 }
                                 if (state is SearchStateSuccess) {
                                   final location = state.location;
+                                  _goToPlace(state.location.latitude, state.location.longitude);
                                   return Row(
                                     children: [
                                       Text(location.name),
@@ -337,12 +338,10 @@ class OnPlanningState extends State<OnPlanning> {
     return time.hour + time.minute / 60.0;
   }
 
-  Future<void> _goToPlace(Map<String, dynamic> place) async {
-    final double lat = place['geometry']['location']['lat'];
-    final double lng = place['geometry']['location']['lng'];
+  Future<void> _goToPlace(double latitude, double longitude) async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: LatLng(lat, lng), zoom: 14),
+      CameraPosition(target: LatLng(latitude, longitude), zoom: 14),
     ));
   }
 }
