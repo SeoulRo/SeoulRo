@@ -97,6 +97,7 @@ class _MyAppState extends State<MyApp> {
                                 child: const Text("아니요")),
                             TextButton(
                                 onPressed: () {
+                                  Navigator.of(context).pop();
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) {
                                       return BlocProvider.value(
