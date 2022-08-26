@@ -1,11 +1,18 @@
+import 'dart:convert' as convert;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
-import 'package:seoul_ro/views/on_planning.dart';
-import 'package:seoul_ro/views/on_dailytrip.dart';
-import 'package:seoul_ro/views/utils/app_theme.dart';
-import 'bloc/location_search/location_search_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:seoul_ro/bloc/poller/poller_bloc.dart';
+import 'package:seoul_ro/bloc/poller/poller_state.dart';
+import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
+import 'package:seoul_ro/models/Poller.dart';
+import 'package:seoul_ro/views/on_dailytrip.dart';
+import 'package:seoul_ro/views/on_planning.dart';
+import 'package:seoul_ro/views/utils/app_theme.dart';
+
+import 'bloc/location_search/location_search_bloc.dart';
 
 void main() {
   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -20,6 +27,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _pageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,37 +39,56 @@ class _MyAppState extends State<MyApp> {
             create: (_) => LocationSearchBloc(),
           ),
           BlocProvider<TimetableBloc>(create: (_) => TimetableBloc()),
+          BlocProvider<PollerBloc>(
+              create: (_) => PollerBloc(poller: const Poller())),
         ],
-        child: DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            body: SafeArea(
-              child: IndexedStack(
-                index: _pageIndex,
-                children: const [
-                  OnDailyTrip(),
-                  OnPlanning(),
-                ],
+        child: Builder(builder: (context) {
+          return BlocListener<PollerBloc, PollerState>(
+            listener: (context, state) async {
+              if (state is PollerRunInProgress) {
+                final TimetableBloc timetableBloc = context.read<TimetableBloc>();
+                if (timetableBloc.state.spots.isNotEmpty) {
+                  print(timetableBloc.state.spots);
+                  const String url = 'http://3.34.4.211/sensors';
+
+                  var response = await http.get(Uri.parse(url));
+                  var json = convert.jsonDecode(response.body);
+                  print(json);
+                }
+              }
+            },
+            child: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                body: SafeArea(
+                  child: IndexedStack(
+                    index: _pageIndex,
+                    children: const [
+                      OnDailyTrip(),
+                      OnPlanning(),
+                    ],
+                  ),
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  items: const [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.directions), label: "여행중"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.map_outlined), label: "일정"),
+                  ],
+                  currentIndex: _pageIndex,
+                  selectedItemColor: Theme.of(context).primaryColorLight,
+                  onTap: (index) {
+                    setState(() {
+                      _pageIndex = index;
+                    });
+                  },
+                ),
               ),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.directions), label: "여행중"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.map_outlined), label: "일정"),
-              ],
-              currentIndex: _pageIndex,
-              selectedItemColor: Theme.of(context).primaryColorLight,
-              onTap: (index) {
-                setState(() {
-                  _pageIndex = index;
-                });
-              },
-            ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }

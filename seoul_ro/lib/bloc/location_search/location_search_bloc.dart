@@ -147,10 +147,12 @@ class LocationSearchBloc
       }
 
       final result = Location(
-          name: place['name'],
-          latitude: placeLat,
-          longitude: placeLong,
-          popularTimes: popularTimes);
+        name: place['name'],
+        latitude: placeLat,
+        longitude: placeLong,
+        popularTimes: popularTimes,
+        closestSensorId: closestSensor.id,
+      );
 
       emit(SearchStateSuccess(result));
     });

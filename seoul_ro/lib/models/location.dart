@@ -7,10 +7,13 @@ class Location {
   final double latitude;
   final double longitude;
   final List<PopularTimes> popularTimes;
+  final int closestSensorId;
 
-  const Location(
-      {required this.name,
-      required this.latitude,
-      required this.longitude,
-      required this.popularTimes});
+  const Location({
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+    required this.popularTimes,
+    required this.closestSensorId,
+  });
 }

@@ -53,7 +53,9 @@ const Spot defaultSpot = Spot(
     longitude: 0.0,
     popularTimes: <PopularTimes>[],
     startTime: TimeOfDay(hour: 0, minute: 0),
-    endTime: TimeOfDay(hour: 0, minute: 0));
+    endTime: TimeOfDay(hour: 0, minute: 0),
+    closestSensorId: 0
+);
 
 class NavigationDiagram extends StatelessWidget {
   final Spot currentSpot;
