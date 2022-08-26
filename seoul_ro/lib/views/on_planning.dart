@@ -14,6 +14,7 @@ import 'package:seoul_ro/bloc/timetable/timetable_event.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/models/spot.dart';
 import 'package:seoul_ro/views/utils/datetime_compare.dart';
+import 'package:seoul_ro/services/reschedule_service.dart';
 
 class OnPlanning extends StatefulWidget {
   const OnPlanning({Key? key}) : super(key: key);
@@ -27,6 +28,7 @@ class OnPlanningState extends State<OnPlanning> {
   final TextEditingController _searchController = TextEditingController();
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
+  List<Spot> _currentSpots = <Spot>[];
 
   static const CameraPosition _gyeongBokGung = CameraPosition(
     target: LatLng(37.5105, 126.9818),
@@ -276,6 +278,68 @@ class OnPlanningState extends State<OnPlanning> {
             ),
           ),
         ]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            _currentSpots = [...state.spots];
+            final Rescheduler spotRescheduler =
+                Rescheduler(spots: _currentSpots);
+            final List<Spot> rescheduledSpots = spotRescheduler
+                .rescheduleSpots(TimeOfDay.fromDateTime(DateTime.now()));
+            bool changeConfirmed = false;
+            await showDialog(
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    title: Text('일정을 변경하시겠어요?'),
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              const Text('변경전'),
+                              ..._currentSpots.map((spot) {
+                                return Text(spot.name);
+                              }).toList()
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const Text('변경후'),
+                              ...rescheduledSpots.map((spot) {
+                                return Text(spot.name);
+                              }).toList()
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("취소")),
+                          TextButton(
+                              onPressed: () {
+                                changeConfirmed = true;
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("확인")),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+                barrierDismissible: true);
+            if (changeConfirmed == true) {
+              context
+                  .read<TimetableBloc>()
+                  .add(SpotListChanged(changedSpots: rescheduledSpots));
+            }
+          },
+          child: const Text('재정렬'),
+          elevation: 2.0,
+        ),
       );
     });
   }
