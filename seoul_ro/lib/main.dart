@@ -1,9 +1,7 @@
-import 'dart:convert' as convert;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:seoul_ro/bloc/poller/poller_bloc.dart';
 import 'package:seoul_ro/bloc/poller/poller_state.dart';
@@ -87,7 +85,8 @@ class _MyAppState extends State<MyApp> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: const Text("다음 목적지에 혼잡이 예상됩니다. 새로운 경로로 가시겠어요?"),
+                          title:
+                              const Text("다음 목적지에 혼잡이 예상됩니다. 새로운 경로로 가시겠어요?"),
                           actions: [
                             TextButton(
                                 onPressed: () {
