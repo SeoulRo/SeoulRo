@@ -276,6 +276,11 @@ class OnPlanningState extends State<OnPlanning> {
             ),
           ),
         ]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Text('재정렬'),
+          elevation: 2.0,
+        ),
       );
     });
   }
