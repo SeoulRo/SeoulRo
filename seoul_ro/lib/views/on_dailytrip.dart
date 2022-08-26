@@ -44,8 +44,6 @@ class _OnDailyTripState extends State<OnDailyTrip> {
                     final TimetableBloc timetableBloc =
                         context.read<TimetableBloc>();
                     if (snapshot.hasData) {
-                      print(snapshot.data);
-                      print(state.spots);
                       final List<Spot> closeSpots = state.spots.where((spot) {
                         final TimeOfDay currentTime =
                             TimeOfDay.fromDateTime(snapshot.data!);
@@ -55,7 +53,6 @@ class _OnDailyTripState extends State<OnDailyTrip> {
                           return false;
                         }
                       }).toList();
-                      print(closeSpots);
 
                       if (closeSpots.isNotEmpty) {
                         Spot currentSpot = closeSpots.first;

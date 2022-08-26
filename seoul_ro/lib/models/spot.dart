@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:seoul_ro/models/popular_times.dart';
+import 'package:seoul_ro/utils.dart';
 
 @immutable
 class Spot {
@@ -23,23 +22,8 @@ class Spot {
     required this.closestSensorId,
   });
 
-  Traffic calculateTraffic(int selectedWeekday) {
-    if (popularTimes.isEmpty) {
-      return Traffic.unknown;
-    }
-    int peak = popularTimes[selectedWeekday].data.reduce(min);
-    int maxTraffic = popularTimes[selectedWeekday]
-        .data
-        .sublist(startTime.hour, endTime.hour + 1)
-        .reduce(max);
-
-    if (maxTraffic < 50 || maxTraffic < peak * 0.3) {
-      return Traffic.green;
-    } else if (maxTraffic < peak * 0.6) {
-      return Traffic.yellow;
-    } else {
-      return Traffic.red;
-    }
+  Traffic calculateTraffic({int selectedWeekday = 5}) {
+    return popularTimes.calculateTraffic(startTime, endTime);
   }
 }
 
@@ -48,4 +32,19 @@ enum Traffic {
   yellow,
   red,
   unknown,
+}
+
+extension TrafficExtension on Traffic {
+  int get value {
+    switch(this) {
+      case Traffic.unknown:
+        return 0;
+      case Traffic.green:
+        return 1;
+      case Traffic.yellow:
+        return 2;
+      case Traffic.red:
+        return 3;
+    }
+  }
 }
