@@ -40,6 +40,16 @@ class Spot {
         endTime: endTime,
         closestSensorId: closestSensorId);
   }
+  Spot copyWithTime(TimeOfDay startTime, TimeOfDay endTime) {
+    return Spot(
+        name: name,
+        latitude: latitude,
+        longitude: longitude,
+        popularTimes: popularTimes,
+        startTime: startTime,
+        endTime: endTime,
+        closestSensorId: closestSensorId);
+  }
 }
 
 enum Traffic {

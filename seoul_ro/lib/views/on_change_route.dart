@@ -71,7 +71,16 @@ class _OnChangeRouteState extends State<OnChangeRoute> {
         for (Spot spot in timetableBloc.state.spots) {
           afterChangeSpots.add(spot.copyWith());
         }
-        afterChangeSpots.insert(2, afterChangeSpots.removeAt(1));
+
+        Spot spotToMoveBack = afterChangeSpots.removeAt(1);
+        Spot spotToMoveFront = afterChangeSpots.removeAt(1);
+        Spot newSpotToMoveBack = spotToMoveBack.copyWithTime(
+            spotToMoveFront.startTime, spotToMoveFront.endTime);
+        Spot newSpotToMoveFront = spotToMoveFront.copyWithTime(
+            spotToMoveBack.startTime, spotToMoveBack.endTime);
+
+        afterChangeSpots.insert(1, newSpotToMoveBack);
+        afterChangeSpots.insert(1, newSpotToMoveFront);
         //TODO must change
 
         return Scaffold(
