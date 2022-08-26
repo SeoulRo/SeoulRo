@@ -39,8 +39,20 @@ class Rescheduler {
 
     _findBestRoute(rescheduled, visitingTimes, notVisitedSpots, totalTraffic,
         initialPositions);
+    List<Spot> rescheduledSpots = [];
 
-    return rescheduled;
+    for (int i = 0; i < visitingTimes.length; i++) {
+      rescheduledSpots.add(Spot(
+        startTime: visitingTimes[i].key,
+        endTime: visitingTimes[i].value,
+        name: rescheduled[i].name,
+        closestSensorId: rescheduled[i].closestSensorId,
+        longitude: rescheduled[i].longitude,
+        latitude: rescheduled[i].latitude,
+        popularTimes: rescheduled[i].popularTimes,
+      ));
+    }
+    return rescheduledSpots;
   }
 
   void _findBestRoute(
