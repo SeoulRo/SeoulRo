@@ -4,7 +4,7 @@ import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_event.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../utils/date_range.dart';
+import 'utils/date_range.dart';
 
 class OnDaySelection extends StatefulWidget {
   const OnDaySelection({Key? key}) : super(key: key);
@@ -103,9 +103,8 @@ class _OnDaySelectionState extends State<OnDaySelection> {
                               context.read<TimetableBloc>().add(
                                   TitleAdded(title: _tripNameController.text));
                               if (_selectedDay != null) {
-                                context
-                                    .read<TimetableBloc>()
-                                    .add(DateAdded(date: _selectedDay!));
+                                context.read<TimetableBloc>().add(DateAdded(
+                                    date: _selectedDay!, isDateSelected: true));
                               }
                               Navigator.pop(context);
                             },

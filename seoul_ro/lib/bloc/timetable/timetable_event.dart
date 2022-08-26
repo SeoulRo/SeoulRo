@@ -15,10 +15,11 @@ class TitleAdded extends TimetableEvent {
 
 class DateAdded extends TimetableEvent {
   final DateTime date;
-  const DateAdded({required this.date});
+  final bool isDateSelected;
+  const DateAdded({required this.date, required this.isDateSelected});
 
   @override
-  List<Object> get props => [date];
+  List<Object> get props => [date, isDateSelected];
 }
 
 class SpotAdded extends TimetableEvent {

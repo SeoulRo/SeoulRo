@@ -1,7 +1,7 @@
 import 'dart:async';
 
-class Ticker {
-  Ticker();
+class SecondTicker {
+  SecondTicker();
 
   Stream<DateTime> tick() {
     return Stream<DateTime>.periodic(
