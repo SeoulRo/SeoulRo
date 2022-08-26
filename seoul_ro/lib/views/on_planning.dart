@@ -29,7 +29,7 @@ class OnPlanningState extends State<OnPlanning> {
   TimeOfDay? _endTime;
 
   static const CameraPosition _gyeongBokGung = CameraPosition(
-      target: LatLng(37.5105, 126.9818),
+    target: LatLng(37.5105, 126.9818),
     zoom: 11,
   );
   Map<int, BitmapDescriptor> greenIcons = {};
@@ -76,7 +76,7 @@ class OnPlanningState extends State<OnPlanning> {
         ),
         body: Column(children: [
           SizedBox(
-            height: 400,
+            height: 350,
             child: GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: _gyeongBokGung,
@@ -133,22 +133,43 @@ class OnPlanningState extends State<OnPlanning> {
               child: Row(
                 children: [
                   Container(
-                      color: Colors.orangeAccent,
                       height: 350,
                       width: 350,
-                      child: Column(
-                        children: <Widget>[
-                          const Text("일정"),
-                          state.spots.isNotEmpty
-                              ? Column(
-                                  children: state.spots
-                                      .map((spot) => Text(spot.name))
-                                      .toList())
-                              : const SizedBox()
-                        ],
-                      )),
+                      child: Column(children: <Widget>[
+                        const Text("일정"),
+                        const Divider(),
+                        state.spots.isNotEmpty
+                            ? Expanded(
+                                child: ListView.builder(
+                                    padding: EdgeInsets.all(1),
+                                    itemCount: state.spots.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      Spot spot = state.spots[index];
+                                      return ListTile(
+                                        leading: Text(spot.toTimeString()),
+                                        title: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.blue),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 20),
+                                            spot.name,
+                                          ),
+                                        ),
+                                      );
+                                    }))
+                            : const SizedBox(),
+                      ])),
+                  VerticalDivider(
+                    thickness: 4,
+                  ),
                   Container(
-                      color: Colors.green,
                       height: 350,
                       width: 300,
                       child: Column(
