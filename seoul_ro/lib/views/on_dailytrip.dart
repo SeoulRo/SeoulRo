@@ -44,15 +44,18 @@ class _OnDailyTripState extends State<OnDailyTrip> {
                     final TimetableBloc timetableBloc =
                         context.read<TimetableBloc>();
                     if (snapshot.hasData) {
-                      final List<Spot> closeSpots = state.spots.where((spot) {
-                        final TimeOfDay currentTime =
-                            TimeOfDay.fromDateTime(snapshot.data!);
-                        if (isLaterThan(currentTime, spot.startTime)) {
+                      int currentSpotIdx = state.spots.indexWhere((spot) {
+                        if (isLaterThan(spot.startTime,
+                                TimeOfDay.fromDateTime(snapshot.data!)) &&
+                            isFasterThan(spot.endTime,
+                                TimeOfDay.fromDateTime(snapshot.data!))) {
                           return true;
                         } else {
                           return false;
                         }
-                      }).toList();
+                      });
+                      final List<Spot> closeSpots =
+                          state.spots.sublist(currentSpotIdx).toList();
 
                       if (closeSpots.isNotEmpty) {
                         Spot currentSpot = closeSpots.first;
