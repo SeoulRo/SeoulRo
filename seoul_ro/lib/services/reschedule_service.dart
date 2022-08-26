@@ -4,23 +4,22 @@ import '../models/spot.dart';
 import 'package:intl/intl.dart';
 import 'package:seoul_ro/views/utils/datetime_compare.dart';
 import 'package:seoul_ro/utils.dart';
-import 'dart:collection';
 
 class Rescheduler {
   final List<Spot> spots;
   const Rescheduler({required this.spots});
 
   List<Spot> rescheduleBfs() {
-    List<Spot> notVisitedSpots = spots.where((spot) {
+    int notVisitedIdx = spots.indexWhere((spot) {
       if (isLaterThan(spot.startTime, TimeOfDay.fromDateTime(DateTime.now()))) {
         return true;
       } else {
         return false;
       }
-    }).toList();
-
+    });
+    List<Spot> visitedSpots = spots.sublist(0, notVisitedIdx);
+    List<Spot> notVisitedSpots = spots.sublist(notVisitedIdx);
     List<Traffic> traffics = notVisitedSpots.map((spot) {
-      final int weekOfDay = _convertDayToIndex(DateTime.now());
       return spot.popularTimes.calculateTraffic(spot.startTime, spot.endTime);
     }).toList();
 
@@ -28,6 +27,10 @@ class Rescheduler {
     for (Traffic curT in traffics) {
       totalTraffic += curT.value;
     }
+    List<MapEntry<TimeOfDay, TimeOfDay>> visitedTimes =
+        visitedSpots.map((spot) {
+      return MapEntry(spot.startTime, spot.endTime);
+    }).toList();
 
     List<MapEntry<TimeOfDay, TimeOfDay>> visitingTimes =
         notVisitedSpots.map((spot) {
@@ -43,6 +46,16 @@ class Rescheduler {
         notVisitedSpots, totalTraffic, initialPositions));
 
     List<Spot> rescheduledSpots = [];
+    for (int i = 0; i < visitedTimes.length; i++) {
+      rescheduledSpots.add(Spot(
+          startTime: visitedTimes[i].key,
+          endTime: visitedTimes[i].value,
+          name: visitedSpots[i].name,
+          latitude: visitedSpots[i].latitude,
+          longitude: visitedSpots[i].longitude,
+          popularTimes: visitedSpots[i].popularTimes,
+          closestSensorId: visitedSpots[i].closestSensorId));
+    }
     print(spotsOfbestRoute);
     for (int i = 0; i < visitingTimes.length; i++) {
       rescheduledSpots.add(Spot(
