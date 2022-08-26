@@ -101,7 +101,7 @@ class OnPlanningState extends State<OnPlanning> {
                         Spot spot = entry.value;
                         BitmapDescriptor icon;
                         try {
-                          switch (spot.calculateTraffic(5)) {
+                          switch (spot.calculateTraffic()) {
                             case Traffic.green:
                               icon = greenIcons[idx];
                               break;
