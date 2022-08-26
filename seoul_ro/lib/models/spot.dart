@@ -26,6 +26,10 @@ class Spot {
     return popularTimes.calculateTraffic(startTime, endTime);
   }
 
+  String toTimeString() {
+    return "${this.startTime.hour.toString().padLeft(2, '0')}:${this.startTime.minute.toString().padLeft(2, '0')}~${this.endTime.hour.toString().padLeft(2, '0')}:${this.startTime.minute.toString().padLeft(2, '0')}";
+  }
+
   Spot copyWith() {
     return Spot(
         name: name,
