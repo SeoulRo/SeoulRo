@@ -92,7 +92,8 @@ class Rescheduler {
           moveCost < trafficAndMoveCost.last) {
         trafficAndMoveCost[0] = traffic;
         trafficAndMoveCost[1] = moveCost;
-        rescheduled = [...newSpots];
+        rescheduled.clear();
+        rescheduled.addAll(newSpots);
       }
       return;
     }
