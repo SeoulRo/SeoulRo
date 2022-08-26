@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:seoul_ro/bloc/poller/poller_bloc.dart';
+import 'package:seoul_ro/bloc/poller/poller_event.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/models/popular_times.dart';
@@ -18,6 +20,13 @@ class OnDailyTrip extends StatefulWidget {
 
 class _OnDailyTripState extends State<OnDailyTrip> {
   final Stream<DateTime> _ticker = Ticker().tick();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<PollerBloc>().add(PollerStarted(duration: 3));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
