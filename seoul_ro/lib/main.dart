@@ -11,6 +11,7 @@ import 'package:seoul_ro/models/popular_times.dart';
 import 'package:seoul_ro/models/spot.dart';
 import 'package:seoul_ro/services/sensor_service.dart';
 import 'package:seoul_ro/utils.dart';
+import 'package:seoul_ro/views/on_change_route.dart';
 import 'package:seoul_ro/views/on_dailytrip.dart';
 import 'package:seoul_ro/views/on_planning.dart';
 import 'package:seoul_ro/views/utils/app_theme.dart';
@@ -91,6 +92,17 @@ class _MyAppState extends State<MyApp> {
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
+                                },
+                                child: const Text("아니요")),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) {
+                                      return BlocProvider.value(
+                                          value: timetableBloc,
+                                          child: const OnChangeRoute());
+                                    },
+                                  ));
                                 },
                                 child: const Text("확인")),
                           ],

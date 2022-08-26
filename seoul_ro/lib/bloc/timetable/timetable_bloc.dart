@@ -10,6 +10,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     on<TitleAdded>(_onTitleAdded);
     on<DateAdded>(_onDateAdded);
     on<SpotAdded>(_onSpotAdded);
+    on<SpotListChanged>(_onSpotListChanged);
   }
 
   FutureOr<void> _onTitleAdded(TitleAdded event, Emitter<TimetableState> emit) {
@@ -34,6 +35,15 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     final TimetableState newTimetableState = state.copyWith(
       spots: newSpots,
     );
+    emit(newTimetableState);
+  }
+
+  FutureOr<void> _onSpotListChanged(
+      SpotListChanged event, Emitter<TimetableState> emit) {
+    final TimetableState newTimetableState = state.copyWith(
+      spots: event.changedSpots,
+    );
+
     emit(newTimetableState);
   }
 }

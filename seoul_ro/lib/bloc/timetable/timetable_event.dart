@@ -30,3 +30,12 @@ class SpotAdded extends TimetableEvent {
   @override
   List<Object> get props => [spot];
 }
+
+class SpotListChanged extends TimetableEvent {
+  final List<Spot> changedSpots;
+
+  const SpotListChanged({required this.changedSpots});
+
+  @override
+  List<Object> get props => [changedSpots];
+}

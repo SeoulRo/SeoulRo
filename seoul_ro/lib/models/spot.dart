@@ -25,6 +25,17 @@ class Spot {
   Traffic calculateTraffic({int selectedWeekday = 5}) {
     return popularTimes.calculateTraffic(startTime, endTime);
   }
+
+  Spot copyWith() {
+    return Spot(
+        name: name,
+        latitude: latitude,
+        longitude: longitude,
+        popularTimes: popularTimes,
+        startTime: startTime,
+        endTime: endTime,
+        closestSensorId: closestSensorId);
+  }
 }
 
 enum Traffic {
@@ -36,7 +47,7 @@ enum Traffic {
 
 extension TrafficExtension on Traffic {
   int get value {
-    switch(this) {
+    switch (this) {
       case Traffic.unknown:
         return 0;
       case Traffic.green:
