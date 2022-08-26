@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
-import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
-import 'package:seoul_ro/models/spot.dart';
-import 'package:seoul_ro/models/secondticker.dart';
 import 'package:seoul_ro/models/popular_times.dart';
+import 'package:seoul_ro/models/spot.dart';
 
 const Spot defaultSpot = Spot(
     name: '',
@@ -18,6 +14,7 @@ const Spot defaultSpot = Spot(
 class NavigationDiagram extends StatelessWidget {
   final Spot currentSpot;
   final Spot nextSpot;
+
   const NavigationDiagram({
     Key? key,
     this.currentSpot = defaultSpot,
@@ -28,64 +25,50 @@ class NavigationDiagram extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
-              border: Border.all(
-                width: 1.0,
-                color: Colors.black,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: currentSpot.calculateTraffic().color,
+              borderRadius: BorderRadius.all(Radius.circular(40)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text(currentSpot.name),
+              child: Text(style: TextStyle(fontSize: 25), currentSpot.name),
             ),
           ),
           DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border.all(width: 1.0, color: Colors.black),
-            ),
-            child: SizedBox(
-              width: 200,
-              height: 100,
-              child: Text(
-                  '${currentSpot.startTime.hour}:${currentSpot.startTime.minute} ~ ${currentSpot.endTime.hour}:${currentSpot.endTime.minute}'),
-            ),
+            decoration: BoxDecoration(),
+            child: Text(
+                style: TextStyle(fontSize: 20),
+                '${currentSpot.startTime.hour.toString().padLeft(2, '0')}:${currentSpot.startTime.minute.toString().padLeft(2, '0')} ~ ${currentSpot.endTime.hour.toString().padLeft(2, '0')}:${currentSpot.endTime.minute.toString().padLeft(2, '0')}'),
           )
         ],
       ),
       const SizedBox(
         width: 100,
         height: 200,
-        child: Icon(Icons.arrow_downward),
+        child: Icon(size: 100, Icons.arrow_downward),
       ),
       Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
-              border: Border.all(
-                width: 1.0,
-                color: Colors.black,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: nextSpot.calculateTraffic().color,
+              borderRadius: BorderRadius.all(Radius.circular(40)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text(nextSpot.name),
+              child: Text(style: TextStyle(fontSize: 25), nextSpot.name),
             ),
           ),
           DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border.all(width: 1.0, color: Colors.black),
-            ),
+            decoration: BoxDecoration(),
             child: SizedBox(
-              width: 200,
-              height: 100,
               child: Text(
-                  '${nextSpot.startTime.hour}:${nextSpot.startTime.minute} ~ ${nextSpot.endTime.hour}:${nextSpot.endTime.minute}'),
+                  style: TextStyle(fontSize: 20),
+                  '${nextSpot.startTime.hour.toString().padLeft(2, '0')}:${nextSpot.startTime.minute.toString().padLeft(2, '0')} ~ ${nextSpot.endTime.hour.toString().padLeft(2, '0')}:${nextSpot.endTime.minute.toString().padLeft(2, '0')}'),
             ),
           )
         ],
