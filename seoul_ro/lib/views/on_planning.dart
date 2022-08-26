@@ -235,6 +235,7 @@ class OnPlanningState extends State<OnPlanning> {
                                             popularTimes: location.popularTimes,
                                             startTime: _startTime!,
                                             endTime: _endTime!,
+                                            closestSensorId: location.closestSensorId,
                                           );
                                           context
                                               .read<TimetableBloc>()

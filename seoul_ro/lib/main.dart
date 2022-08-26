@@ -1,5 +1,8 @@
+import 'dart:convert' as convert;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:seoul_ro/bloc/poller/poller_bloc.dart';
 import 'package:seoul_ro/bloc/poller/poller_state.dart';
@@ -42,6 +45,17 @@ class _MyAppState extends State<MyApp> {
         child: Builder(builder: (context) {
           return BlocListener<PollerBloc, PollerState>(
             listener: (context, state) async {
+              if (state is PollerRunInProgress) {
+                final TimetableBloc timetableBloc = context.read<TimetableBloc>();
+                if (timetableBloc.state.spots.isNotEmpty) {
+                  print(timetableBloc.state.spots);
+                  const String url = 'http://3.34.4.211/sensors';
+
+                  var response = await http.get(Uri.parse(url));
+                  var json = convert.jsonDecode(response.body);
+                  print(json);
+                }
+              }
             },
             child: DefaultTabController(
               length: 2,

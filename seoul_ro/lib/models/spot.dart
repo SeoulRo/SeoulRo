@@ -11,14 +11,17 @@ class Spot {
   final List<PopularTimes> popularTimes;
   final TimeOfDay startTime;
   final TimeOfDay endTime;
+  final int closestSensorId;
 
-  const Spot(
-      {required this.name,
-      required this.latitude,
-      required this.longitude,
-      required this.popularTimes,
-      required this.startTime,
-      required this.endTime});
+  const Spot({
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+    required this.popularTimes,
+    required this.startTime,
+    required this.endTime,
+    required this.closestSensorId,
+  });
 
   Traffic calculateTraffic(int selectedWeekday) {
     if (popularTimes.isEmpty) {
@@ -27,7 +30,7 @@ class Spot {
     int peak = popularTimes[selectedWeekday].data.reduce(min);
     int maxTraffic = popularTimes[selectedWeekday]
         .data
-        .sublist(startTime.hour, endTime.hour +1)
+        .sublist(startTime.hour, endTime.hour + 1)
         .reduce(max);
 
     if (maxTraffic < 50 || maxTraffic < peak * 0.3) {
