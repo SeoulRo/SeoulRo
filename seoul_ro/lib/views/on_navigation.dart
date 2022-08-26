@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/models/spot.dart';
-import 'package:seoul_ro/models/ticker.dart';
+import 'package:seoul_ro/models/secondticker.dart';
 import 'package:seoul_ro/models/popular_times.dart';
 
 class OnNavigation extends StatefulWidget {
@@ -18,7 +18,7 @@ class OnNavigation extends StatefulWidget {
 
 class _OnNavigationState extends State<OnNavigation> {
   DateTime _currentTime = DateTime.now();
-  final Stream<DateTime> _ticker = Ticker().tick();
+  final Stream<DateTime> _ticker = SecondTicker().tick();
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +54,7 @@ const Spot defaultSpot = Spot(
     popularTimes: <PopularTimes>[],
     startTime: TimeOfDay(hour: 0, minute: 0),
     endTime: TimeOfDay(hour: 0, minute: 0),
-    closestSensorId: 0
-);
+    closestSensorId: 0);
 
 class NavigationDiagram extends StatelessWidget {
   final Spot currentSpot;

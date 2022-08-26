@@ -9,7 +9,7 @@ import 'package:seoul_ro/views/on_navigation.dart';
 import 'package:seoul_ro/views/ui/screens/on_day_selection.dart';
 import 'package:seoul_ro/models/spot.dart';
 import 'package:seoul_ro/views/utils/datetime_compare.dart';
-import 'package:seoul_ro/models/ticker.dart';
+import 'package:seoul_ro/models/secondticker.dart';
 
 class OnDailyTrip extends StatefulWidget {
   const OnDailyTrip({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class OnDailyTrip extends StatefulWidget {
 }
 
 class _OnDailyTripState extends State<OnDailyTrip> {
-  final Stream<DateTime> _ticker = Ticker().tick();
+  final Stream<DateTime> _ticker = SecondTicker().tick();
 
   @override
   void initState() {
