@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
+import 'package:seoul_ro/bloc/timetable/timetable_event.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/models/spot.dart';
 
@@ -37,22 +38,22 @@ class _OnChangeRouteState extends State<OnChangeRoute> {
   void initState() {
     for (var number in [1, 2, 3, 4, 5, 6]) {
       getBytesFromAsset('assets/icons/G$number.png', 100).then((onValue) {
-        setState((){
+        setState(() {
           greenIcons[number] = BitmapDescriptor.fromBytes(onValue);
         });
       });
       getBytesFromAsset('assets/icons/Y$number.png', 100).then((onValue) {
-        setState((){
+        setState(() {
           yellowIcons[number] = BitmapDescriptor.fromBytes(onValue);
         });
       });
       getBytesFromAsset('assets/icons/R$number.png', 100).then((onValue) {
-        setState((){
+        setState(() {
           redIcons[number] = BitmapDescriptor.fromBytes(onValue);
         });
       });
       getBytesFromAsset('assets/icons/B$number.png', 100).then((onValue) {
-        setState((){
+        setState(() {
           greyIcons[number] = BitmapDescriptor.fromBytes(onValue);
         });
       });
@@ -160,10 +161,7 @@ class _OnChangeRouteState extends State<OnChangeRoute> {
                           }
                         : <Polyline>{},
                     markers: (afterChangeSpots.isNotEmpty)
-                        ? afterChangeSpots
-                            .asMap()
-                            .entries
-                            .map((entry) {
+                        ? afterChangeSpots.asMap().entries.map((entry) {
                             int idx = entry.key;
                             Spot spot = entry.value;
                             BitmapDescriptor icon;
@@ -195,6 +193,26 @@ class _OnChangeRouteState extends State<OnChangeRoute> {
                           }).toSet()
                         : <Marker>{}),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("그대로 두기"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context
+                          .read<TimetableBloc>()
+                          .add(SpotListChanged(changedSpots: afterChangeSpots));
+                      Navigator.pop(context);
+                    },
+                    child: Text("이대로 변경하기"),
+                  )
+                ],
+              )
             ],
           ),
         );
