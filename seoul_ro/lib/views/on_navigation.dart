@@ -6,46 +6,6 @@ import 'package:seoul_ro/models/spot.dart';
 import 'package:seoul_ro/models/secondticker.dart';
 import 'package:seoul_ro/models/popular_times.dart';
 
-class OnNavigation extends StatefulWidget {
-  Spot currentSpot;
-  Spot nextSpot;
-  OnNavigation({Key? key, required this.currentSpot, required this.nextSpot})
-      : super(key: key);
-
-  @override
-  State<OnNavigation> createState() => _OnNavigationState();
-}
-
-class _OnNavigationState extends State<OnNavigation> {
-  final Stream<DateTime> _ticker = SecondTicker().tick();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<TimetableBloc, TimetableState>(
-        buildWhen: (_, __) => true,
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('여행 가이드'),
-            ),
-            body: StreamBuilder<DateTime>(
-                stream: _ticker,
-                initialData: DateTime.now(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    // 여기서 현재 시간(월,일)로 스팟을 가져올 수 있어야함.
-                    return NavigationDiagram(
-                        currentSpot: widget.currentSpot,
-                        nextSpot: widget.nextSpot);
-                  } else {
-                    return const Text('남은 여행지가 없어요');
-                  }
-                }),
-          );
-        });
-  }
-}
-
 const Spot defaultSpot = Spot(
     name: '',
     latitude: 0.0,
