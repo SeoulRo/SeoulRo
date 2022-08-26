@@ -66,7 +66,8 @@ class _OnDailyTripState extends State<OnDailyTrip> {
                               longitude: 0.0,
                               popularTimes: <PopularTimes>[],
                               startTime: TimeOfDay(hour: 0, minute: 0),
-                              endTime: TimeOfDay(hour: 0, minute: 0));
+                              endTime: TimeOfDay(hour: 0, minute: 0),
+                              closestSensorId: 0);
 
                           if (closeSpots.length > 1) {
                             nextSpot = closeSpots[1];
