@@ -40,6 +40,7 @@ class Spot {
         endTime: endTime,
         closestSensorId: closestSensorId);
   }
+
   Spot copyWithTime(TimeOfDay startTime, TimeOfDay endTime) {
     return Spot(
         name: name,
@@ -70,6 +71,19 @@ extension TrafficExtension on Traffic {
         return 2;
       case Traffic.red:
         return 3;
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case Traffic.unknown:
+        return Colors.grey;
+      case Traffic.green:
+        return Colors.green;
+      case Traffic.yellow:
+        return Colors.yellow;
+      case Traffic.red:
+        return Colors.red;
     }
   }
 }
