@@ -4,12 +4,12 @@ import 'package:seoul_ro/bloc/poller/poller_bloc.dart';
 import 'package:seoul_ro/bloc/poller/poller_event.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
-import 'package:seoul_ro/models/popular_times.dart';
 import 'package:seoul_ro/views/on_navigation.dart';
 import 'package:seoul_ro/views/on_day_selection.dart';
 import 'package:seoul_ro/models/spot.dart';
 import 'package:seoul_ro/views/utils/datetime_compare.dart';
 import 'package:seoul_ro/models/secondticker.dart';
+import 'package:seoul_ro/utils.dart';
 
 class OnDailyTrip extends StatefulWidget {
   const OnDailyTrip({Key? key}) : super(key: key);
@@ -44,42 +44,12 @@ class _OnDailyTripState extends State<OnDailyTrip> {
                     final TimetableBloc timetableBloc =
                         context.read<TimetableBloc>();
                     if (snapshot.hasData) {
-                      int currentSpotIdx = state.spots.indexWhere((spot) {
-                        if (isLaterThan(spot.startTime,
-                                TimeOfDay.fromDateTime(snapshot.data!)) &&
-                            isFasterThan(spot.endTime,
-                                TimeOfDay.fromDateTime(snapshot.data!))) {
-                          return true;
-                        } else {
-                          return false;
-                        }
-                      });
-                      final List<Spot> closeSpots =
-                          state.spots.sublist(currentSpotIdx).toList();
-
-                      if (closeSpots.isNotEmpty) {
-                        Spot currentSpot = closeSpots.first;
-                        if (isTripOn(currentSpot, snapshot.data!)) {
-                          Spot nextSpot = const Spot(
-                              name: '',
-                              latitude: 0.0,
-                              longitude: 0.0,
-                              popularTimes: <PopularTimes>[],
-                              startTime: TimeOfDay(hour: 0, minute: 0),
-                              endTime: TimeOfDay(hour: 0, minute: 0),
-                              closestSensorId: 0);
-
-                          if (closeSpots.length > 1) {
-                            nextSpot = closeSpots[1];
-                            return NavigationDiagram(
-                                currentSpot: currentSpot, nextSpot: nextSpot);
-                          } else {
-                            return NavigationDiagram(currentSpot: currentSpot);
-                          }
-                        } else {
-                          return const NavigationDiagram();
-                        }
-                      } else {
+                      try {
+                        Spot currentSpot = state.spots.currentlyVisitingSpot();
+                        Spot nextSpot = state.spots.nextVisitingSpot();
+                        return NavigationDiagram(
+                            currentSpot: currentSpot, nextSpot: nextSpot);
+                      } catch (error) {
                         if (state.isDateSelected) {
                           return Column(
                               mainAxisAlignment: MainAxisAlignment.center,
