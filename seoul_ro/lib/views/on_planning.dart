@@ -29,13 +29,13 @@ class OnPlanningState extends State<OnPlanning> {
   TimeOfDay? _endTime;
 
   static const CameraPosition _gyeongBokGung = CameraPosition(
-    target: LatLng(37.57986, 126.97711),
-    zoom: 14,
+      target: LatLng(37.5105, 126.9818),
+    zoom: 11,
   );
-  List<BitmapDescriptor> greenIcons = List.empty(growable: true);
-  List<BitmapDescriptor> yellowIcons = List.empty(growable: true);
-  List<BitmapDescriptor> redIcons = List.empty(growable: true);
-  List<BitmapDescriptor> greyIcons = List.empty(growable: true);
+  Map<int, BitmapDescriptor> greenIcons = {};
+  Map<int, BitmapDescriptor> yellowIcons = {};
+  Map<int, BitmapDescriptor> redIcons = {};
+  Map<int, BitmapDescriptor> greyIcons = {};
 
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -51,16 +51,16 @@ class OnPlanningState extends State<OnPlanning> {
   void initState() {
     for (var number in [1, 2, 3, 4, 5, 6]) {
       getBytesFromAsset('assets/icons/G$number.png', 100).then((onValue) {
-        greenIcons.add(BitmapDescriptor.fromBytes(onValue));
+        greenIcons[number] = BitmapDescriptor.fromBytes(onValue);
       });
       getBytesFromAsset('assets/icons/Y$number.png', 100).then((onValue) {
-        yellowIcons.add(BitmapDescriptor.fromBytes(onValue));
+        yellowIcons[number] = BitmapDescriptor.fromBytes(onValue);
       });
       getBytesFromAsset('assets/icons/R$number.png', 100).then((onValue) {
-        redIcons.add(BitmapDescriptor.fromBytes(onValue));
+        redIcons[number] = BitmapDescriptor.fromBytes(onValue);
       });
       getBytesFromAsset('assets/icons/B$number.png', 100).then((onValue) {
-        greyIcons.add(BitmapDescriptor.fromBytes(onValue));
+        greyIcons[number] = BitmapDescriptor.fromBytes(onValue);
       });
     }
     super.initState();
@@ -103,16 +103,16 @@ class OnPlanningState extends State<OnPlanning> {
                         try {
                           switch (spot.calculateTraffic()) {
                             case Traffic.green:
-                              icon = greenIcons[idx];
+                              icon = greenIcons[idx + 1]!;
                               break;
                             case Traffic.yellow:
-                              icon = yellowIcons[idx];
+                              icon = yellowIcons[idx + 1]!;
                               break;
                             case Traffic.red:
-                              icon = redIcons[idx];
+                              icon = redIcons[idx + 1]!;
                               break;
                             case Traffic.unknown:
-                              icon = greyIcons[idx];
+                              icon = greyIcons[idx + 1]!;
                               break;
                           }
                         } catch (exception) {
@@ -235,7 +235,8 @@ class OnPlanningState extends State<OnPlanning> {
                                             popularTimes: location.popularTimes,
                                             startTime: _startTime!,
                                             endTime: _endTime!,
-                                            closestSensorId: location.closestSensorId,
+                                            closestSensorId:
+                                                location.closestSensorId,
                                           );
                                           context
                                               .read<TimetableBloc>()
