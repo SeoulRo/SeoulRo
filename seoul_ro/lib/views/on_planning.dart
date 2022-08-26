@@ -283,8 +283,8 @@ class OnPlanningState extends State<OnPlanning> {
             _currentSpots = [...state.spots];
             final Rescheduler spotRescheduler =
                 Rescheduler(spots: _currentSpots);
-            final List<Spot> rescheduledSpots = spotRescheduler
-                .rescheduleSpots(TimeOfDay.fromDateTime(DateTime.now()));
+            final List<Spot> rescheduledSpots = spotRescheduler.rescheduleBfs();
+            print(rescheduledSpots);
             bool changeConfirmed = false;
             await showDialog(
                 context: context,
