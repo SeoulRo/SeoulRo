@@ -1,11 +1,10 @@
 import 'dart:async';
 
 class Ticker {
-  final DateTime currentTime = DateTime.now();
   Ticker();
 
   Stream<DateTime> tick() {
-    return Stream<DateTime>.periodic(const Duration(seconds: 1),
-        (x) => currentTime.add(Duration(seconds: x)));
+    return Stream<DateTime>.periodic(
+        const Duration(seconds: 1), (_) => DateTime.now());
   }
 }
