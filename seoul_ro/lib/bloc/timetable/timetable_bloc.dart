@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_event.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/models/spot.dart';
+import 'package:seoul_ro/views/utils/datetime_compare.dart';
 
 class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
   TimetableBloc() : super(TimetableState(date: DateTime.now())) {
@@ -32,6 +33,15 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
 
   FutureOr<void> _onSpotAdded(SpotAdded event, Emitter<TimetableState> emit) {
     final List<Spot> newSpots = [...state.spots, event.spot];
+    newSpots.sort((spot1, spot2) {
+      if (isFasterThan(spot1.startTime, spot2.startTime)) {
+        return -1;
+      } else if (isLaterThan(spot1.startTime, spot2.startTime)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
     final TimetableState newTimetableState = state.copyWith(
       spots: newSpots,
     );
