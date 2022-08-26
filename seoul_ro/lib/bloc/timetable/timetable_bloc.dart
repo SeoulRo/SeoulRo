@@ -25,6 +25,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     final DateTime newDate = event.date;
     final TimetableState newTimetableState = state.copyWith(
       date: newDate,
+      isDateSelected: true,
     );
     emit(newTimetableState);
   }

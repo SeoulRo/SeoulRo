@@ -6,10 +6,10 @@ import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/models/popular_times.dart';
 import 'package:seoul_ro/views/on_navigation.dart';
-import 'package:seoul_ro/views/ui/screens/on_day_selection.dart';
+import 'package:seoul_ro/views/on_day_selection.dart';
 import 'package:seoul_ro/models/spot.dart';
 import 'package:seoul_ro/views/utils/datetime_compare.dart';
-import 'package:seoul_ro/models/ticker.dart';
+import 'package:seoul_ro/models/secondticker.dart';
 
 class OnDailyTrip extends StatefulWidget {
   const OnDailyTrip({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class OnDailyTrip extends StatefulWidget {
 }
 
 class _OnDailyTripState extends State<OnDailyTrip> {
-  final Stream<DateTime> _ticker = Ticker().tick();
+  final Stream<DateTime> _ticker = SecondTicker().tick();
 
   @override
   void initState() {
@@ -77,7 +77,7 @@ class _OnDailyTripState extends State<OnDailyTrip> {
                           return const NavigationDiagram();
                         }
                       } else {
-                        if (isDateChosen(state.date)) {
+                        if (state.isDateSelected) {
                           return Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -159,16 +159,9 @@ bool isTripOn(Spot firstSpot, DateTime currentTime) {
   }
 }
 
-bool isDateChosen(DateTime date) {
-  final int differenceInDay = date.difference(DateTime.now()).inDays;
-  if (differenceInDay <= 0) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
 String createDayChosenMessage(DateTime date) {
-  final int differenceInDays = date.difference(DateTime.now()).inDays;
+  final DateTime today = DateTime.now();
+  final dateNow = DateTime.utc(today.year, today.month, today.day, 0, 0, 0);
+  final int differenceInDays = date.difference(dateNow).inDays;
   return '$differenceInDays일 뒤 여행 시작이에요!';
 }
