@@ -17,7 +17,6 @@ class OnNavigation extends StatefulWidget {
 }
 
 class _OnNavigationState extends State<OnNavigation> {
-  DateTime _currentTime = DateTime.now();
   final Stream<DateTime> _ticker = SecondTicker().tick();
 
   @override
