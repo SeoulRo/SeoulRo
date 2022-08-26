@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +13,7 @@ import 'package:seoul_ro/bloc/timetable/timetable_bloc.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_event.dart';
 import 'package:seoul_ro/bloc/timetable/timetable_state.dart';
 import 'package:seoul_ro/models/spot.dart';
+import 'package:seoul_ro/views/utils/datetime_compare.dart';
 
 class OnPlanning extends StatefulWidget {
   const OnPlanning({Key? key}) : super(key: key);
@@ -182,7 +182,8 @@ class OnPlanningState extends State<OnPlanning> {
                                 }
                                 if (state is SearchStateSuccess) {
                                   final location = state.location;
-                                  _goToPlace(state.location.latitude, state.location.longitude);
+                                  _goToPlace(state.location.latitude,
+                                      state.location.longitude);
                                   return Row(
                                     children: [
                                       Text(location.name),
@@ -200,7 +201,7 @@ class OnPlanningState extends State<OnPlanning> {
                                             return;
                                           }
 
-                                          if (_isLaterThan(
+                                          if (isLaterThan(
                                               _startTime!, _endTime!)) {
                                             await showDialog(
                                                 context: context,
@@ -322,20 +323,6 @@ class OnPlanningState extends State<OnPlanning> {
       return null;
     }
     return endTime;
-  }
-
-  bool _isLaterThan(TimeOfDay firstTime, TimeOfDay secondTime) {
-    final double firstTimeInDouble = _toDouble(firstTime);
-    final double secondTimeInDouble = _toDouble(secondTime);
-    if (firstTimeInDouble >= secondTimeInDouble) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  double _toDouble(TimeOfDay time) {
-    return time.hour + time.minute / 60.0;
   }
 
   Future<void> _goToPlace(double latitude, double longitude) async {
