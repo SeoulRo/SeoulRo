@@ -29,6 +29,24 @@ extension NextVisitingSpot on List<Spot> {
   }
 }
 
+extension AreSameSpots on List<Spot> {
+  bool areSameSpots(List<Spot> spots) {
+    if (length != spots.length) {
+      return false;
+    }
+    for (int i = 0; i < spots.length; i++) {
+      Spot thisSpot = elementAt(i);
+      Spot otherSpot = spots.elementAt(i);
+      if (thisSpot.name != otherSpot.name ||
+          thisSpot.startTime != otherSpot.startTime ||
+          thisSpot.endTime != otherSpot.endTime) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
 extension IsLaterThan on TimeOfDay {
   bool isLaterThan(TimeOfDay day) {
     return toDouble(this) > toDouble(day);
