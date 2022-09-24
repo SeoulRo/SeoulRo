@@ -25,6 +25,7 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
+	<li><a href="#award">Award</a></li>
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
@@ -39,7 +40,12 @@
 
 
 
+## Award
+
+<img src="./readme_assets/상장.jpg" alt="Award" style="zoom: 15%;" />
+
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 ![서울로](./readme_assets/%EC%97%AC%ED%96%89%EA%B2%BD%EB%A1%9C%ED%91%9C%EC%8B%9C.png)
