@@ -42,7 +42,7 @@
 
 ## Award
 
-<img src="./readme_assets/상장.jpg" alt="Award" style="zoom: 15%;" />
+<img src="./readme_assets/상장.jpg" alt="Award" style="width: 400px;" />
 
 <!-- ABOUT THE PROJECT -->
 
