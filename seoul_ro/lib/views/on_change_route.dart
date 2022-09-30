@@ -134,7 +134,6 @@ class _OnChangeRouteState extends State<OnChangeRoute> {
                                   break;
                               }
                             } catch (exception) {
-                              print(exception);
                               icon = BitmapDescriptor.defaultMarkerWithHue(
                                   BitmapDescriptor.hueRed);
                             }
@@ -190,7 +189,6 @@ class _OnChangeRouteState extends State<OnChangeRoute> {
                                   break;
                               }
                             } catch (exception) {
-                              print(exception);
                               icon = BitmapDescriptor.defaultMarkerWithHue(
                                   BitmapDescriptor.hueRed);
                             }
