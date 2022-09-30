@@ -24,7 +24,6 @@ extension CurrentlyVisitingSpot on List<Spot> {
 extension NextVisitingSpot on List<Spot> {
   Spot nextVisitingSpot() {
     final currentlyVisitingSpotIndex = indexOf(currentlyVisitingSpot());
-    print(currentlyVisitingSpotIndex);
     return this[currentlyVisitingSpotIndex + 1];
   }
 }

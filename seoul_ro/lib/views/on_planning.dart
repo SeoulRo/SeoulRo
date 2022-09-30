@@ -16,6 +16,13 @@ import 'package:seoul_ro/models/spot.dart';
 import 'package:seoul_ro/views/utils/datetime_compare.dart';
 import 'package:seoul_ro/services/reschedule_service.dart';
 
+const Map<String, String> trafficLights = {
+  "Green": "assets/icons/G",
+  "Yellow": "assets/icons/Y",
+  "Red": "assets/icons/R",
+  "Grey": "assets/icons/B"
+};
+
 class OnPlanning extends StatefulWidget {
   const OnPlanning({Key? key}) : super(key: key);
 
@@ -34,10 +41,9 @@ class OnPlanningState extends State<OnPlanning> {
     target: LatLng(37.5105, 126.9818),
     zoom: 11,
   );
-  Map<int, BitmapDescriptor> greenIcons = {};
-  Map<int, BitmapDescriptor> yellowIcons = {};
-  Map<int, BitmapDescriptor> redIcons = {};
-  Map<int, BitmapDescriptor> greyIcons = {};
+  Map<String, Map<int, BitmapDescriptor>> trafficLightIcons =
+      Map<String, Map<int, BitmapDescriptor>>.fromIterables(trafficLights.keys,
+          Iterable.generate(4, (_) => <int, BitmapDescriptor>{}));
 
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -51,18 +57,13 @@ class OnPlanningState extends State<OnPlanning> {
 
   @override
   void initState() {
+    const int iconWidth = 100;
     for (var number in [1, 2, 3, 4, 5, 6]) {
-      getBytesFromAsset('assets/icons/G$number.png', 100).then((onValue) {
-        greenIcons[number] = BitmapDescriptor.fromBytes(onValue);
-      });
-      getBytesFromAsset('assets/icons/Y$number.png', 100).then((onValue) {
-        yellowIcons[number] = BitmapDescriptor.fromBytes(onValue);
-      });
-      getBytesFromAsset('assets/icons/R$number.png', 100).then((onValue) {
-        redIcons[number] = BitmapDescriptor.fromBytes(onValue);
-      });
-      getBytesFromAsset('assets/icons/B$number.png', 100).then((onValue) {
-        greyIcons[number] = BitmapDescriptor.fromBytes(onValue);
+      trafficLights.forEach((trafficLight, assetIconPath) async {
+        var value =
+            await getBytesFromAsset('$assetIconPath$number.png', iconWidth);
+        trafficLightIcons[trafficLight]?[number] =
+            BitmapDescriptor.fromBytes(value);
       });
     }
     super.initState();
@@ -105,16 +106,16 @@ class OnPlanningState extends State<OnPlanning> {
                         try {
                           switch (spot.calculateTraffic()) {
                             case Traffic.green:
-                              icon = greenIcons[idx + 1]!;
+                              icon = trafficLightIcons["Green"]![idx + 1]!;
                               break;
                             case Traffic.yellow:
-                              icon = yellowIcons[idx + 1]!;
+                              icon = trafficLightIcons["Yellow"]![idx + 1]!;
                               break;
                             case Traffic.red:
-                              icon = redIcons[idx + 1]!;
+                              icon = trafficLightIcons["Red"]![idx + 1]!;
                               break;
                             case Traffic.unknown:
-                              icon = greyIcons[idx + 1]!;
+                              icon = trafficLightIcons["Grey"]![idx + 1]!;
                               break;
                           }
                         } catch (exception) {
@@ -134,7 +135,7 @@ class OnPlanningState extends State<OnPlanning> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  Container(
+                  SizedBox(
                       height: 350,
                       width: 350,
                       child: Column(children: <Widget>[
@@ -143,7 +144,7 @@ class OnPlanningState extends State<OnPlanning> {
                         state.spots.isNotEmpty
                             ? Expanded(
                                 child: ListView.builder(
-                                    padding: EdgeInsets.all(1),
+                                    padding: const EdgeInsets.all(1),
                                     itemCount: state.spots.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
@@ -151,7 +152,7 @@ class OnPlanningState extends State<OnPlanning> {
                                       return ListTile(
                                         leading: Text(spot.toTimeString()),
                                         title: Container(
-                                          padding: EdgeInsets.all(10),
+                                          padding: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
                                             border:
                                                 Border.all(color: Colors.blue),
@@ -160,7 +161,8 @@ class OnPlanningState extends State<OnPlanning> {
                                           ),
                                           child: Text(
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 20),
+                                            style:
+                                                const TextStyle(fontSize: 20),
                                             spot.name,
                                           ),
                                         ),
@@ -168,10 +170,10 @@ class OnPlanningState extends State<OnPlanning> {
                                     }))
                             : const SizedBox(),
                       ])),
-                  VerticalDivider(
+                  const VerticalDivider(
                     thickness: 4,
                   ),
-                  Container(
+                  SizedBox(
                       height: 350,
                       width: 300,
                       child: Column(
@@ -284,13 +286,12 @@ class OnPlanningState extends State<OnPlanning> {
             final Rescheduler spotRescheduler =
                 Rescheduler(spots: _currentSpots);
             final List<Spot> rescheduledSpots = spotRescheduler.rescheduleBfs();
-            print(rescheduledSpots);
             bool changeConfirmed = false;
             await showDialog(
                 context: context,
                 builder: (context) {
                   return SimpleDialog(
-                    title: Text('일정을 변경하시겠어요?'),
+                    title: const Text('일정을 변경하시겠어요?'),
                     children: [
                       Row(
                         children: [
@@ -337,8 +338,8 @@ class OnPlanningState extends State<OnPlanning> {
                   .add(SpotListChanged(changedSpots: rescheduledSpots));
             }
           },
-          child: const Text('재정렬'),
           elevation: 2.0,
+          child: const Text('재정렬'),
         ),
       );
     });
@@ -352,7 +353,7 @@ class OnPlanningState extends State<OnPlanning> {
     TimeOfDay? startTime;
     startTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay(hour: 0, minute: 0),
+        initialTime: const TimeOfDay(hour: 0, minute: 0),
         helpText: '시작시간을 설정하기',
         cancelText: '취소',
         confirmText: '확인',
@@ -384,7 +385,7 @@ class OnPlanningState extends State<OnPlanning> {
     TimeOfDay? endTime;
     endTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay(hour: 0, minute: 0),
+        initialTime: const TimeOfDay(hour: 0, minute: 0),
         helpText: '종료시간을 설정하기',
         cancelText: '취소',
         confirmText: '확인',
