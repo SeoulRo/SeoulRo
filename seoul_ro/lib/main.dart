@@ -64,9 +64,6 @@ class _MyAppState extends State<MyApp> {
                   int peak = popularTimes[5].data.reduce(max);
                   Traffic initialTraffic = popularTimes.calculateTraffic(
                       nextVisitingSpot.startTime, nextVisitingSpot.endTime);
-                  print(nextVisitingSpot.closestSensorId);
-                  print(nextVisitingSpot.closestSensorId);
-                  print(nextVisitingSpot.closestSensorId);
 
                   Traffic newTraffic;
                   int newSensorData =
@@ -112,7 +109,6 @@ class _MyAppState extends State<MyApp> {
                         );
                       },
                     );
-                    print("traffic increased!!");
                   }
                 }
               }

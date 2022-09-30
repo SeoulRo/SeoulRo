@@ -16,7 +16,6 @@ class PollerBloc extends Bloc<PollerEvent, PollerState> {
   }
 
   void _onStarted(PollerStarted event, Emitter<PollerState> emit) {
-    print("onStarted called");
     emit(PollerRunInProgress(dummy: Random().nextInt(100)));
     _poller
         .poll(ticks: 1)
@@ -24,7 +23,6 @@ class PollerBloc extends Bloc<PollerEvent, PollerState> {
   }
 
   void _onPolled(PollerPolled event, Emitter<PollerState> emit) {
-    print("onPolled called");
     emit(PollerRunInProgress(dummy: Random().nextInt(100)));
   }
 }
