@@ -62,7 +62,7 @@ class OnPlanningState extends State<OnPlanning> {
       trafficLights.forEach((trafficLight, assetIconPath) async {
         var value =
             await getBytesFromAsset('$assetIconPath$number.png', iconWidth);
-        trafficLightIcons[trafficLight[0]]?[number] =
+        trafficLightIcons[trafficLight.substring(0, 1)]?[number] =
             BitmapDescriptor.fromBytes(value);
       });
     }
