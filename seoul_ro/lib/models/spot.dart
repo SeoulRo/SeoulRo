@@ -27,28 +27,17 @@ class Spot {
   }
 
   String toTimeString() {
-    return "${this.startTime.hour.toString().padLeft(2, '0')}:${this.startTime.minute.toString().padLeft(2, '0')}~${this.endTime.hour.toString().padLeft(2, '0')}:${this.startTime.minute.toString().padLeft(2, '0')}";
+    return "${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}~${endTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}";
   }
 
-  Spot copyWith() {
+  Spot copyWith({TimeOfDay? newStartTime, TimeOfDay? newEndTime}) {
     return Spot(
         name: name,
         latitude: latitude,
         longitude: longitude,
         popularTimes: popularTimes,
-        startTime: startTime,
-        endTime: endTime,
-        closestSensorId: closestSensorId);
-  }
-
-  Spot copyWithTime(TimeOfDay startTime, TimeOfDay endTime) {
-    return Spot(
-        name: name,
-        latitude: latitude,
-        longitude: longitude,
-        popularTimes: popularTimes,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: (newStartTime != null) ? newStartTime : startTime,
+        endTime: (newEndTime != null) ? newEndTime : endTime,
         closestSensorId: closestSensorId);
   }
 }

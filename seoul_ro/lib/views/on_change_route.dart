@@ -74,10 +74,12 @@ class _OnChangeRouteState extends State<OnChangeRoute> {
 
         Spot spotToMoveBack = afterChangeSpots.removeAt(1);
         Spot spotToMoveFront = afterChangeSpots.removeAt(1);
-        Spot newSpotToMoveBack = spotToMoveBack.copyWithTime(
-            spotToMoveFront.startTime, spotToMoveFront.endTime);
-        Spot newSpotToMoveFront = spotToMoveFront.copyWithTime(
-            spotToMoveBack.startTime, spotToMoveBack.endTime);
+        Spot newSpotToMoveBack = spotToMoveBack.copyWith(
+            newStartTime: spotToMoveFront.startTime,
+            newEndTime: spotToMoveFront.endTime);
+        Spot newSpotToMoveFront = spotToMoveFront.copyWith(
+            newStartTime: spotToMoveBack.startTime,
+            newEndTime: spotToMoveBack.endTime);
 
         afterChangeSpots.insert(1, newSpotToMoveBack);
         afterChangeSpots.insert(1, newSpotToMoveFront);
