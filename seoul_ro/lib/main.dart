@@ -51,65 +51,15 @@ class _MyAppState extends State<MyApp> {
         child: Builder(builder: (context) {
           return BlocListener<PollerBloc, PollerState>(
             listener: (context, state) async {
-              if (state is PollerRunInProgress) {
-                final TimetableBloc timetableBloc =
-                    context.read<TimetableBloc>();
-                if (timetableBloc.state.spots.length >= 3) {
-                  var json = await SensorService().getSensorData();
+              final TimetableBloc timetableBloc = context.read<TimetableBloc>();
 
-                  Spot nextVisitingSpot =
-                      timetableBloc.state.spots.nextVisitingSpot();
-                  List<PopularTimes> popularTimes =
-                      nextVisitingSpot.popularTimes;
-                  int peak = popularTimes[5].data.reduce(max);
-                  Traffic initialTraffic = popularTimes.calculateTraffic(
-                      nextVisitingSpot.startTime, nextVisitingSpot.endTime);
-
-                  Traffic newTraffic;
-                  int newSensorData =
-                      json[nextVisitingSpot.closestSensorId.toString()];
-                  if (newSensorData < 0.3 * peak || newSensorData < 50) {
-                    newTraffic = Traffic.green;
-                  } else if (newSensorData < 0.6 * peak) {
-                    newTraffic = Traffic.yellow;
-                  } else {
-                    newTraffic = Traffic.red;
-                  }
-                  if (newTraffic.value > initialTraffic.value &&
-                      !askedToChange) {
-                    setState(() {
-                      askedToChange = true;
-                    });
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title:
-                              const Text("다음 목적지에 혼잡이 예상됩니다. 새로운 경로로 가시겠어요?"),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("아니요")),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) {
-                                      return BlocProvider.value(
-                                          value: timetableBloc,
-                                          child: const OnChangeRoute());
-                                    },
-                                  ));
-                                },
-                                child: const Text("확인")),
-                          ],
-                          actionsAlignment: MainAxisAlignment.center,
-                        );
-                      },
-                    );
-                  }
+              if (state is PollerRunInProgress &&
+                  timetableBloc.state.spots.length >= 3) {
+                final bool isRescheduleRequired =
+                    await checkRescheduleRequired(timetableBloc);
+                if (isRescheduleRequired && !askedToChange) {
+                  setState(() => askedToChange = true);
+                  showRescheduleDialog(context, timetableBloc);
                 }
               }
             },
@@ -146,6 +96,69 @@ class _MyAppState extends State<MyApp> {
           );
         }),
       ),
+    );
+  }
+
+  Future<bool> checkRescheduleRequired(TimetableBloc timetableBloc) async {
+    Map<String, int> sensorData = await SensorService().getSensorData();
+
+    final Spot nextVisitingSpot = timetableBloc.state.spots.nextVisitingSpot();
+
+    final List<PopularTimes> popularTimes = nextVisitingSpot.popularTimes;
+
+    final int peak = popularTimes[5].data.reduce(max);
+
+    final Traffic oldTrafficLightColor = popularTimes.calculateTraffic(
+        nextVisitingSpot.startTime, nextVisitingSpot.endTime);
+
+    final int? newSensorData =
+        sensorData[nextVisitingSpot.closestSensorId.toString()];
+
+    final Traffic newTrafficLightColor =
+        setTrafficLightColor(newSensorData, peak);
+
+    return newTrafficLightColor.value > oldTrafficLightColor.value;
+  }
+
+  Traffic setTrafficLightColor(int? newSensorData, int peak) {
+    if (newSensorData == null) return Traffic.unknown;
+    if (newSensorData < 0.3 * peak || newSensorData < 50) {
+      return Traffic.green;
+    } else if (newSensorData < 0.6 * peak) {
+      return Traffic.yellow;
+    } else {
+      return Traffic.red;
+    }
+  }
+
+  Future<dynamic> showRescheduleDialog(
+      BuildContext context, TimetableBloc timetableBloc) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("다음 목적지에 혼잡이 예상됩니다. 새로운 경로로 가시겠어요?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("아니요")),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return BlocProvider.value(
+                          value: timetableBloc, child: const OnChangeRoute());
+                    },
+                  ));
+                },
+                child: const Text("확인")),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
     );
   }
 }
